@@ -55,7 +55,6 @@ const Sidebar = () => {
         {filteredScheduledItem.map((item) => {
           const IconComponent = iconMap[item.icon];
 
-          // Optional: skip rendering if icon not found (invalid string in DB)
           if (!IconComponent) return null;
 
           return (

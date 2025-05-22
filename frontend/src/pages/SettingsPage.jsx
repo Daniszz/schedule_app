@@ -44,7 +44,7 @@ const SettingsPage = () => {
           ))}
         </div>
 
-        <h3 className="text-lg font-semibold mb-3"> Preview</h3>
+        {/* <h3 className="text-lg font-semibold mb-3"> Preview</h3>
         <div className="rounded-xl border border-base-300 overflow-hidden bg-base-100 shadow-lg">
           <div className="p-4 bg-base-200">
             <div className="max-w-lg mx-auto">
@@ -61,7 +61,7 @@ const SettingsPage = () => {
                   </div>
                 </div>
 
-                <div className="p-4 space-y-4 min-h-[200px] overflow-y-auto bg-base-100">
+                {/* <div className="p-4 space-y-4 min-h-[200px] overflow-y-auto bg-base-100">
                   {PREVIEW_MESSAGES.map((message) => (
                     <div
                       key={message.id}
@@ -92,9 +92,9 @@ const SettingsPage = () => {
                       </div>
                     </div>
                   ))}
-                </div>
+                </div> */}
 
-                <div className="p-4 border-t border-base-300 bg-base-100">
+        {/* <div className="p-4 border-t border-base-300 bg-base-100">
                   <div className="flex gap-2">
                     <input
                       type="text"
@@ -111,7 +111,7 @@ const SettingsPage = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

@@ -2,8 +2,10 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
 import { ClockPlus, Settings, User, LogOut } from "lucide-react";
-
+import { useCreateStore } from "../store/useCreateStore";
 const Navbar = () => {
+  const { setCreateForm } = useCreateStore();
+
   const { logout, authUser } = useAuthStore();
   return (
     <header
@@ -15,6 +17,7 @@ const Navbar = () => {
           <div className="flex items-center gap-8">
             <Link
               to="/"
+              onClick={() => setCreateForm(false)}
               className="flex items-center gap-2.5 hover:opacity-80 transition-all"
             >
               <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
