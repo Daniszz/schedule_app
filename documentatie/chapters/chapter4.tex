@@ -1,0 +1,113 @@
+\chapter{Experimente și rezultate}
+
+\section{Măsurători și metrici}
+Inițial vom discuta despre cum arată instanțele de test in ceea ce privește parametri de bază ai algoritmilor: graful $G=(V,E)$, vectorul de culori $p$, numărul total de unități de timp/culori $D$, limita numărului de unități de resurse partajate/culori $l$ și vectorul de câștig $g$. Pentru generarea grafului se folosesc doi parametri: numărul n de vârfuri și o densitate a grafului d (probabilitate de avea o muchie între două noduri). Am considerat $n \in \{30,150,300\}$ și $d \in \{0.2, 0.5, 0.8\}$. Pentru fiecare combinație (n,d) sunt generate câte 10 instanțe. Numărul de culori $p_i$ a unui vârf $i$ este un număr întreg pozitiv ales aleatoriu în intervalul $[1,10]$. Pentru a simula scenariile reale unde câștigul este în strânsă legătură cu timpul de procesare ($p_i$), cu cât e un timp de procesare mai mare cu atât și câștigul este mai mare. Prin urmare $g_i = \beta \cdot p_i$, unde $\beta$ este ales aleatoriu în intervalul $[1,20]$. Limita de resurse $l$ este setată la 25.
+
+În privința lui $D$ (numărul total de culori) am dori să aibă o valoarea ce nu permite colorarea completă pentru a vedea comportamentul algoritmilor cât mai bine.
+Pentru a determina o valoare potrivită a lui $D$, a fost creat un script care, pentru fiecare combinație $(n, d)$, generează 100 de instanțe folosind algoritmul Greedy~\ref{alg:greedy_multicoloring}. Pentru fiecare $D$, se calculează procentul mediu de colorare, precum și intervalul [min, max] al procentelor de colorare obținute. Valoarea aleasă pentru testare este cel mai mare $D$ care nu a permis atingerea unui grad de colorare de $100\%$ în niciuna dintre instanțe. 
+
+\begin{table}[H]
+\centering
+\caption{Rezultatele generării valori $D$}
+\begin{tabular}{ccccc}
+\toprule
+$n$ & $d$ & $D$ & Procent colorat mediu & Interval\\
+\midrule
+30  & 0.2 & 24       & 85.5\% & [70.0\% $-$ 96.7\%] \\
+30  & 0.5 & 42       & 83.7\% & [70.0\% $-$ 96.7\%]\\
+30  & 0.8 & 68       & 82.0\% & [60.0\% $-$ 96.7\%]\\
+150 & 0.2 & 63       & 85.1\% & [79.3\% $-$ 91.3\%]\\
+150 & 0.5 & 132      & 84.6\% & [74.7\% $-$ 91.3\%]\\
+150 & 0.8 & 239      & 82.8\% & [72.0\% $-$ 91.3\%]\\
+300 & 0.2 & 101      & 85.8\% & [81.7\% $-$ 90.0\%]\\
+300 & 0.5 & 228      & 85.8\% & [78.3\% $-$ 90.0\%]\\
+300 & 0.8 & 423      & 84.7\% & [79.0\% $-$ 90.0\%]\\
+\bottomrule
+\end{tabular}\label{tab:rezultate_booktabs}
+\end{table}
+Import de menționat că deși valorile prezentate în tabel sunt rezultatul a 100 de instanțe, generarea grafului dar și algoritmul Greedy sunt realizate prin mecanisme predominat aleatorii, deci aceste date pot varia. Aceste aspecte aleatorii datorează și variața valorilor din intervale.
+
+Algoritmii supuși instanțelor de test implică, pe lângă parametrii de bază, și o serie de parametri suplimentari specifici fiecărui algoritm, după cum urmează:
+\begin{enumerate}
+  \item \textbf{Greedy}~\ref{alg:greedy_multicoloring}: utilizează exclusiv parametrii de bază ai instanței, ceea ce explică simplitatea implementării și eficiența în ceea ce privește timpul de execuție.
+
+  \item \textbf{Descent}~\ref{alg:descent_multicoloring}: necesită definirea unui număr maxim de iterații și a unui număr de restarturi. Aceste valori au fost stabilite prin rulari consecutive pentru fiecare combinație $(n,d)$, pana cand s-a gasit pragul in care creșterea celor două variabile nu produce nicio îmbunătățire (cu o limită de timp de $n$ secunde).
+  \item \textbf{Tabu Search}~\ref{alg:tabu_search}: similar algoritmului Descent, acest algoritm primește un număr maxim de iterații, stabilit conform aceleiași logici de limitare temporală. În plus, include următorii parametri:
+  \begin{itemize}
+    \item dimensiunea numărului de mutări interzise ($tab$): setată la 3 pentru $n = 30$ și la 10 pentru $n \in \{150, 300\}$;
+    \item Parametrul de diversificare $/$ procentul de decoloare ($b$): 20\%;
+    \item numărul maxim de iterații fără îmbunătățire ($I_{\max}$): 150;
+    \item numărul de noduri selectate pentru $R^{Exact}$ ($q$): 20;
+    \item procentajul de vârfuri utilizat în generarea vecinătății~\ref{alg:generator}: 25\%;
+    \item Probabilitate aplicări $R^{SD}$ în cadrul celei de a doua strategii ($\gamma$): 0{,}2.
+  \end{itemize}
+  Valorile acestor parametri au fost determinate în urma unei etape de ajustare, bazată pe rulări preliminare ale algoritmului pe un set reprezentativ de instanțe.
+\end{enumerate}
+
+
+Instanțele de test vor fi încadrate in 3 tabele distincte, grupate în funcție de  numărul de vârfuri $n$ astfel încât să se evidențieze comportamentul algoritmilor în cadrul instanțelor de dimensiuni reduse,medii și mari. Pentru fiecare combinație $(n,d)$ și pentru fiecare algoritm analizat: Greedy, Descent, TS1(Tabu Search cu strategia 1), TS2(Tabu Search cu strategia 2) sunt acordate două coloane: o coloană cu cel mai bun rezultat și o coloană cu rezultatul mediu din cele 10 instanțe. Rezultatele o să fie de forma unui triplet (scor obiectiv f1,scor obiectiv f2,scor obiectiv f3) însoțit de raportul dintre numărul de vârfuri colorate și numărul total de vârfuri.
+
+
+\begin{table}[H]
+\centering
+\caption{Rezultate pentru $n = 30$}
+\begin{tabular}{ccll}
+\toprule
+$d$ & Algoritm & Cel mai bun rezultat  & Media rezultatelor \\
+\midrule
+\multirow{4}{*}{0.2}
+  & Greedy  & (1747, 5, 185), 22/30 & (1623.10, 2.70, 148.40), 20.8/30 \\
+  & Descent & (1808,30,313), 25/30   & (1762.10, 30.90, 296.90), 24/30 \\
+  & TS1     & (1808,22,243), 25/30    & (1771.40, 18.80, 242.00), 23.6/30 \\
+  & TS2     & (1808,58,332), 25/30    & (1782.70,40.40,297.00), 23.6/30 \\
+\midrule
+\multirow{4}{*}{0.5}
+  & Greedy  & (1614,7,170), 26/30     & (1555.30, 5.60, 169.30), 24.89/30 \\
+  & Descent & (1704,40,464), 29/30    & (1671.50, 26.60, 365.70), 28/30 \\
+  & TS1     & (1704,31,384), 29/30    & (1684.60, 30.30, 378.00),
+  27.7/30 \\
+  & TS2     & (1704,32,409), 29/30    & (1669.70,53.30,492.70), 28.7/30 \\
+\midrule
+\multirow{4}{*}{0.8}
+  & Greedy  & (1617,7,169), 27/30     & (1588.70, 6.10, 198.80), 26.4/30 \\
+  & Descent & (1644,43,749), 28/30    & (1631.40, 42.00, 699.20), 28/30 \\
+  & TS1     & (1688,35,620) 29/30     &  (1646.30, 26.20, 473.10), 28/30 \\
+  & TS2     &  (1644,38,556) 28/30    &  (1644.00, 43.80, 608.40), 28.1/30 \\
+\bottomrule
+\end{tabular}\label{tab:rezultate_n30}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Rezultate pentru $n = 30$}
+\begin{tabular}{ccll}
+\toprule
+$d$ & Algoritm & Cel mai bun rezultat  & Media rezultatelor \\
+\midrule
+\multirow{4}{*}{0.2}
+  & Greedy  & (8075, 17, 736), 138/150 & (7994.20, 25.40, 882.40), 134.7/150 \\
+  & Descent & (8358,193,3259), 148/150   & (8335.20, 240.10, 3330.10), 148.5/150 \\
+  & TS1     & (8364,77,1421), 149/150    & (8326.80, 64.40, 1298.60), 147/150 \\
+  & TS2     & (8364,68,1537), 149/150    & (8341.70 ,68.50,1393.00), 148/150 \\
+\midrule
+\multirow{4}{*}{0.5}
+  & Greedy  & (8517,53,1903), 129/150     & (8253.50, 43.70, 1608.70), 124.6/150 \\
+  & Descent & (8862,296,7593), 147/150    & (8807.70, 284.40, 7148.60), 145.9/150 \\
+  & TS1     & (8862,130,3335), 147/150    & (8802.50, 133.00, 3350.20), 144.9/150
+  27.7/30 \\
+  & TS2     & (8891,172,4249), 148/150    & (8829.20,155.50,3720.80), 145.4/150 \\
+\midrule
+\multirow{4}{*}{0.8}
+  & Greedy  & (7655,42,2247), 131/150     & (7579.80, 41.80, 1904.30), 126.8/150 \\
+  & Descent & (7992,280,11956), 149/150    & (7964.10, 250.90, 11422.90), 147.8/150 \\
+  & TS1     & (7985,150,5995) 148/150     &  (7953.90, 144.50, 5258.40), 146.7/150 \\
+  & TS2     &  (8006,212,7657) 150/150    &  (7991.30, 188.10, 6812.80), 148.5/30 \\
+\bottomrule
+\end{tabular}\label{tab:rezultate_n150}
+\end{table}
+
+
+
+\section{Interpretarea rezultatelor și concluzii parțiale}
+\noindent
+În cadrul experimentelor, timpul de execuție nu a fost utilizat ca metrică de performanță, ci doar ca reper pentru setarea parametrilor algoritmilor metaheuristici. Astfel, pentru algoritmii \textit{Descent} și \textit{Tabu Search}, numărul maxim de iterații (și, unde este cazul, numărul de restarturi) a fost calibrat astfel încât timpul total de execuție să nu depășească pragul de $10 \cdot n$ secunde, unde $n$ este numărul de vârfuri al grafului procesat. Prin urmare, timpul a fost uniformizat între instanțele de aceeași dimensiune și nu a reprezentat un criteriu de comparație între algoritmi. Accentul a fost pus pe calitatea soluțiilor obținute în acest interval prestabilit de timp.

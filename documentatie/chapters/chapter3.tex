@@ -1,0 +1,248 @@
+\chapter{Algoritmi implementați}
+Pentru rezolvarea problemei P, am dezvoltat 3 algoritmi: Greedy (constructiv), Descent (căutare locală), Tabu Search (metaeuristic avansat). Voi parcurge în ordine fiecare algoritm oferind pseudocodul corespunzător,urmat de o descriere intuitivă a logicii și principiului de funcționare. De asemenea, este de menționat că fiecare algoritm primește ca parametrii de bază graful $G=(V,E)$, vectorul de culori $p$, numărul total de unități de timp/culori $D$, limia numărului de unități de resurse partajate/culori $l$ și vectorul de câștig $g$. Mai multe detalii despre metoda prin care acești parametri au fost aleși vor fi prezentate în capitolul următor.
+
+
+\section{Algoritmul Greedy}
+
+\begin{algorithm}[H] 
+\caption{Greedy}\label{alg:greedy_multicoloring} 
+\begin{algorithmic}[1] 
+\small
+\State{$s\gets$ soluție inițială goală}
+\State{$V^\prime \leftarrow V$}
+\While{$V^\prime \neq \emptyset$}  
+    \State{$i \leftarrow \max_{v^\prime \in V^\prime} g[v^\prime]$}
+    \State{$V^\prime \gets V^\prime \setminus \{v^\prime\}$}
+    \State{$A_i \gets$ culorile admisibile pentru $i$}          
+    \If{$|A_i| < p[i]$}         
+        \State{\textbf{continue}}  
+    \EndIf{}     
+    \State{$B_i \gets$ cel mai mare subset consecutiv din $A_i$}          
+    \If{$|B_i| \geq p[i]$}         
+        \State{Atribuie $p[i]$ culori consecutive aleatorii din $B_i$}     
+    \Else{}         
+        \State{Atribuie toate culorile din $B_i$}         
+        \State{Completează cu culori din $A_i \setminus B_i$ minimizând întreruperile și dacă este cazul diferența maximă dintre culori (range-ul)}     
+    \EndIf{}
+    \State{actualizează soluția $s$}     
+\EndWhile{}
+\State{\Return$s$}
+
+\end{algorithmic} 
+\end{algorithm}
+
+Această euristică constructivă pornește de la graful de incompatibilitate și se bazează pe alegerea, la fiecare pas, a nodului cu cel mai mare câștig. Din mulțimea de culori $C$ sunt selectate doar acele culori care respectă constrângerile fundamentale specifice nodului respectiv, notate cu $A_i$. Un nod poate fi colorat complet sau deloc; dacă în mulțimea $A_i$ nu există cel puțin $p[i]$ culori admisibile, nodul este exclus din colorare.
+
+Pentru a minimiza întreruperile și diferențele dintre culorile alocate, se caută cel mai mare subset consecutiv de culori din $A_i$, denumit $B_i$. Dacă dimensiunea lui $B_i$ este suficientă pentru a acoperi cerința $p[i]$, nodului $i$ i se atribuie $p[i]$ culori consecutive, alese aleatoriu, din $B_i$.În caz contrar, se atribuie toate culorile din $B_i$, iar restul necesar este completat cu culori din $A_i \setminus B_i$. Completarea se face astfel încât să se minimizeze întreruperile — considerate binar: 0 dacă noile culori sunt consecutive cu cele deja atribuite, 1 în caz contrar. Atunci când întreruperile nu pot fi complet evitate, se preferă culorile aflate cât mai aproape de capătul superior al lui $p_i$, pentru a menține diferențele dintre culori cât mai mici. Această alegere are ca scop secundar reducerea timpului total de flux, asociat obiectivului $f_3$.
+
+
+
+\section{Algoritmul Descent}
+\begin{algorithm}[H]
+\caption{Descent}\label{alg:descent_multicoloring}
+\begin{algorithmic}[1]
+\small
+\While{numărul de restarturi $>0$}
+\State{$s \gets$ soluție inițială generată cu Greedy (vezi Secțiunea~\ref{alg:greedy_multicoloring})}
+\While{nu este îndeplinită o condiție de oprire}
+    \ForAll{ $i \in V$}
+        \If{$|A_i| \geq p[i]$}
+            \State{generează o nouă soluție $s_i$ aplicând  $R^{SD}$ în $i$}
+        \Else{}
+            \State{generează o nouă soluție $s_i$ aplicând $R^{Enf}$ în $i$}
+        \EndIf{}
+        \State{păstrează cea mai bună soluție din vecinătatea $N(s)$}
+    \EndFor{}
+    \If{s-a găsit o soluție mai bună}
+        \State{$s \gets$ soluția îmbunătățită}
+    \EndIf{}
+\EndWhile{}
+\EndWhile{}
+\State{\Return$s$}
+\end{algorithmic}
+\end{algorithm}
+Algorimtul Descent  este o metodă de căutare locală cu restarturi multiple. Acesta pornește de la o soluție inițială construită cu o euristică greedy și o îmbunătățește iterativ prin aplicarea unor mutări asupra vârfurilor, în funcție de culorile disponibile.Deoarece problema nu permite colorarea parțială (fiecare vârf trebuie colorat complet cu exact $p_i$ culori), mutările aplicate recolorează/colorează complet un vârf. Procesul continuă până când nu se mai pot obține îmbunătățiri (optimum local) sau până la atingerea unui număr maxim de iterații. La finalul fiecărei runde, dacă soluția curentă este mai bună decât cea optimă cunoscută, aceasta este salvată. Alegerea mutării depinde de numărul de culori admsibile $|A_i|$ pentru un vârf $i$. Daca $|A_i| \geq p_i$ se aplică $R^{SD}$, în caz contrar se aplică $R^{Enf}$.
+
+\begin{algorithm}[H]
+\caption{$R^{SD}$}\label{alg:RSD}
+\begin{algorithmic}[1]
+\small
+\State{$s^\prime \gets s$}
+\While{nodul $i$ nu este colorat complet}
+    \State{$Z_i \gets \{ j \in Vecini(i) \mid j \text{ necolorat} \}$}
+    \State{$c \gets \max_{c \in A_i}\sum_{j \in Z_i} u_c(j)$}
+    \State{Atribuie culoarea $c$ nodului $i$ în $s^\prime$}
+    \State{$A_i \gets A_i \setminus \{c\}$}
+\EndWhile{}
+\State{\Return{$s^\prime$}}
+\end{algorithmic}
+\end{algorithm}
+$R^{SD}$  are ca scop  minimizarea gradului de saturație al vecinilor necolorați ai lui i (numărul de culori diferite utilizate de vecinii săi). La fiecare pas alegem o culoare $c \in A_i$ care maximizează suma $\sum_{j \in Z_i} u_c(j)$, unde $Z_i$ este mulțimea vecinilor necolorații ai nodului $i$ și $u_c(j)=1$ dacă culoarea este prezentă în vecinii lui j, 0 altfel.Pe scurt, sunt preferate culorile deja „vizibile” în vecinătatea vecinilor lui i, pentru a evita creșterea gradului de saturație și, implicit, restrângerea opțiunilor de colorare în pașii următori.
+\vspace{1cm}
+\begin{algorithm}[H]
+\caption{$R^{Enf}$}\label{alg:RENF}
+\begin{algorithmic}[1]
+\small
+ \State{$s^\prime \gets s$}
+ \State{$s^\prime[i] \gets A_i$}
+ \State{$C_{nesaturate} \gets \{c \in C \setminus A_i \mid \text{count}(c)<l\}$}
+ \ForAll{$c^\prime \in C_{nesaturate}$}
+        \State{$pierdere_{c^\prime} \leftarrow \sum_{j \in Vecini(i), c^\prime \in p[j]} g[j]$}
+    \EndFor{}
+    \State{Sortează $C_{nesaturate}$ descrescător după $pierdere_{c^\prime}$}
+    \While{$p_i - |A_i| > 0$}
+        \ForAll{$c^\prime \in C_{nesaturate}$}
+            \State{Decolorează toți vecinii nodului $i$ ce conțin culoare $c^\prime$}
+             \State{Atribuie culoarea nodului $i$ în $s^\prime$}
+        \EndFor{}
+    \EndWhile{}
+    \State{\Return{$s^\prime$}}
+
+\end{algorithmic}
+\end{algorithm}
+
+      
+
+
+$R^{Enf}$  începe prin a atribui toate culorile admisibile vârfului ($|A_i|<p_i$). Pentru culorile lipsă, identifică culori ``ne-saturate'', adică culori ce respectă constrângerea de capacitate (apar în mai puțin de l vârfuri). Apoi, se estimează pierderea de câștig (în funcție de ponderea vecinilor afectați) pentru eliminarea acestor culori din vecini. Se selectează culorile cu pierdere minimă și se decolorează vecinii care le folosesc, pentru a permite „furtul” acestor culori și completarea colorației vârfului i.
+
+
+
+
+
+
+\section{Algoritmul Tabu Search}
+
+
+\begin{algorithm}[H]
+\caption{Tabu Search}\label{alg:tabu_search}
+\begin{algorithmic}[1]
+\small
+\State{$s \gets$ soluție inițială generată cu Greedy (vezi Secțiunea~\ref{alg:greedy_multicoloring})}
+\State{$s^* \gets s$}
+\State{$I \gets 0$} 
+\While{nu este îndeplinită condiția de oprire}
+    \State{Generează vecinătatea $N(s)$ conform strategiei alese}
+    \State{Selectează $(v, s^\prime) \in N(s)$, cea mai bună soluție non-tabu}
+    \State{Actualizează lista tabu pentru nodul $v$ pentru $tab$ iterații}
+    \State{$s \gets s^\prime$}
+    \If{$f(s) < f(s^*)$} \Comment{funcția f returnează valorile obiectivelor f1,f2,f3 pentru soluția $s$}
+        \State{$s^* \gets s$, $I \gets 0$}
+    \Else{}
+            \State{$I \gets I + 1$}
+    \EndIf{}
+    \If{$I \geq I_{\max}$}
+        \State{Decolorează $b\%$ din vârfuri}
+        \State{$I \gets 0$}
+    \EndIf{}
+\EndWhile{}
+\State{\Return{$s^*$}}
+\end{algorithmic}
+\end{algorithm}
+ Tabu Search este un algortim de căutare locală, similar cu algoritmul Descent, care pornește de la o soluție inițială generată prin metodă euristică Greedy (vezi Secțiunea~\ref{alg:greedy_multicoloring}). La fiecare iterație, se generează vecinătatea soluției curente $N(s)$, adică mulțimea soluțiilor obținute prin modificarea culorii atribuite unui singur vârf din $s$, respectând constrângerile problemei. Din această vecinătate, se selectează cea mai bună soluție non-tabu, adică o soluție care nu implică mutări interzise temporare. Mutările interzise sunt gestionate printr-o listă tabu, care stochează nodurile modificate (recolorate/colorate) recent, împiedicând revenirea pentru un interval de timp la soluții anterioare și astfel evitând ciclurile sau blocarea în minime locale. Pentru fiecare nod $v$ afectat, lista tabu este actualizată și îi interzice modificarea pentru un număr fix de iterații $tab$.
+
+ Algoritmul include și un mecanism de diversificare. Dacă în $I_{\max}$ iterații consecutive nu se obține nicio îmbunătățire privind cele trei obiective, se decolorează  un procentaj $b\%$ din vârfurile soluției curente. Scopul esențial este a de a permite algoritmului explorarea altor regiuni din spațiul soluțiilor.
+
+
+\begin{algorithm}[H]
+\caption{Generarea vecinătății $N(s)$}\label{alg:generator}
+\begin{algorithmic}[1]
+\small
+\State{$N(s) \gets \emptyset$, $Q \gets \emptyset$}
+\If{strategia = 2}
+    \State{Setează $R \in \{R^{Exact}, R^{SD}\}$ cu probabilități $\gamma$ și $1-\gamma$}
+\EndIf{}
+\ForAll{$i \in$ $V^\prime$} \Comment{$V^\prime$ reprezintă un procentaj de vârfuri alese aleatoriu din $V$}
+    \If{$i$ este complet colorat și prob $< 0.25$}
+        \State{Aplică $R^{Drop}(i)$}
+    \EndIf{}
+    \If{prob $<$ 0.25}
+        \If{$|A_i| < p[i]$}
+            \State{Aplică $R^{Enf}(i)$}
+        \Else{}
+            \If{strategia = 1}
+                \State{Aplică $R^{SD}(i)$ și adaugă $i$ în $Q$}
+            \Else{}
+                \State{Aplică $R(i)$} \Comment{selectat anterior între $R^{Exact}$ și $R^{SD}$}
+            \EndIf{}
+        \EndIf{}
+    \EndIf{}
+\EndFor{}
+\If{strategia = 1 și $Q \neq \emptyset$}
+    \State{Sortează $Q$ descrescător după câștig}
+    \State{Aplică $R^{Exact}$ la 25\% dintre primii $q$ din $Q$ (aleator)}
+\EndIf{}
+\State{\Return$N(s)$}
+\end{algorithmic}
+\end{algorithm}
+Vecinătatea unei soluții curente $s$ este generată prin aplicarea unor mișcări specifice asupra unui subset aleatoriu de vârfuri dintr-un procentaj prestabilit al mulțimii $V$, notat cu $V'$ (strategie utilizată pentru a reduce timpul de execuție).
+
+Pentru fiecare $i \in V'$, se aplică una dintre următoarele mișcări, în funcție de strategia selectată și de condițiile locale:
+
+\begin{itemize}
+\item \textbf{$R^{Drop}(i)$}, cu probabilitate de $25\%$, dacă nodul $i$ este complet colorat. Această acțiune elimină toate culorile asociate nodului $i$.
+ \item Tot cu o probabilitate de $25\%$, se aplică una dintre următoarele:
+\begin{itemize}
+    \item \textbf{$R^{Enf}(i)$}, dacă $|A_i| < p[i]$, adică numărul de culori admisibile este insuficient pentru colorarea completă a nodului.
+    
+    \item \textbf{Strategia 1:} Dacă $|A_i| \geq p[i]$, se aplică $R^{SD}(i)$, iar nodul $i$ este adăugat în lista $Q$. După parcurgerea tuturor vârfurilor, lista $Q$ este sortată descrescător după câștig, iar $R^{Exact}$ este aplicată pentru $25\%$ dintre primele $q$ noduri (selectate aleatoriu).
+    
+    \item \textbf{Strategia 2:} Dacă $|A_i| \geq p[i]$, se aplică fie $R^{SD}(i)$, fie $R^{Exact}(i)$, cu probabilități $\gamma$ și $1 - \gamma$, respectiv.
+\end{itemize}
+\end{itemize}
+În urma aplicării acestor mișcări, mulțimea soluțiilor obținute formează vecinătatea $N(s)$ a soluției curente $s$, care este apoi returnată și utilizată în cadrul algoritmului Tabu Search~\ref{alg:tabu_search}.
+
+
+\begin{algorithm}[H]
+\caption{$R_{exact}$}\label{alg:Rexact}
+\begin{algorithmic}[1]
+\small
+\For{$q = 1$ \textbf{to} $p_i$}
+  \ForAll{$c \in A_i$ }
+    \If{$q = 1$}
+      \State{$BestS(q, c) \gets \{c\}$, \quad $Lint(q, c) \gets 0$,} \quad{$Lrg(q, c) \gets 1$}
+    \Else{}
+      \State{$Best_{int} \gets \infty$, $Best_{rg} \gets \infty$, $B \gets \emptyset$}
+      \For{fiecare $c' \in A_i$ cu $c' < c$}
+        \If{$c - c' = 1$}
+          \State{$Int \gets Lint(q{-}1, c')$}
+        \Else{}
+          \State{$Int \gets Lint(q{-}1, c') + 1$}
+        \EndIf{}
+        \If{$Int = Best_{int}$}
+          \State{$B \gets B \cup \{c'\}$}
+        \ElsIf{$Int < Best_{int}$}
+          \State{$Best_{int} \gets Int$, $B \gets \{c'\}$}
+        \EndIf{}
+      \EndFor{}
+      \ForAll{$c' \in B$}
+        \State{$Rg \gets Lrg(q{-}1, c') + (c - c')$}
+        \If{$Rg = Best_{rg}$}
+          \State{$c^* \gets c'$ (cu o anumită probabilitate)}
+        \ElsIf{$Rg < Best_{rg}$}
+          \State{$c^* \gets c'$, $Best_{rg} \gets Rg$}
+        \EndIf{}
+      \EndFor{}
+      \State{$BestS(q, c) \gets BestS(q{-}1, c^*) \cup \{c\}$}
+      \State{$Lint(q, c) \gets Best_{int}$, $Lrg(q, c) \gets Best_{rg}$}
+    \EndIf{}
+  \EndFor{}
+\EndFor{}
+\State{\Return$BestS$}
+\end{algorithmic}
+\end{algorithm}
+
+Algoritmul $R_{exact}$ are ca scop generarea unei secvențe optime de culori pentru un vârf $i$, minimizând două obiective: \textbf{numărul de întreruperi ($f_2$)} și \textbf{diferența de interval (range) ($f_3$)}. O \textit{întrerupere} este definită ca situația în care două culori consecutive dintr-o secvență au o diferență strict mai mare decât 1. \textit{Range-ul} reprezintă diferența dintre cea mai mică și cea mai mare culoare din secvență.
+
+Algoritmul parcurge secvențe de lungime $q$ de la $1$ la $p_i$ (lungimea maximă dorită) și, pentru fiecare lungime $q$, evaluează fiecare culoare $c \in A_i$ (mulțimea culorilor admisibile pentru vârful $i$) ca potențială ultimă culoare a unei secvențe optime. Se utilizează trei structuri de date: $BestS(q, c)$ pentru a reține secvența optimă, $Lint(q, c)$ pentru numărul de întreruperi și $Lrg(q, c)$ pentru range-ul corespunzător.
+
+Pentru $q = 1$, fiecare culoare $c \in A_i$ inițializează o secvență formată doar din $\{c\}$. În acest caz, nu există întreruperi, deci $Lint(1, c) = 0$. Range-ul unei singure culori este 1, deci $Lrg(1, c) = 1$. $BestS(1, c)$ devine $\{c\}$.
+
+
+Pentru $q > 1$, algoritmul încearcă să extindă secvențele valide de lungime $q-1$ prin adăugarea culorii curente $c$. Procesul se face în doi pași efectuați în ordine:
+\begin{enumerate}
+    \item \textbf{Minimizarea întreruperilor ($f_2$):} Se evaluează fiecare $c' \in A_i$ cu $c' < c$. Numărul de întreruperi ($Int$) este calculat ca $Lint(q-1, c')$ dacă $c - c' = 1$ (fără o nouă întrerupere) sau $Lint(q-1, c') + 1$ dacă $c - c' \neq 1$ (o nouă întrerupere). Se construiește un set $B$ care conține toate culorile $c'$ ce minimizează acest $Int$.
+    \item \textbf{Minimizarea range-ului ($f_3$):} Dintre culorile $c'$ aflate în setul $B$, se selectează culoarea $c^*$ care minimizează $Rg = Lrg(q-1, c') + (c - c')$. Acesta reprezintă range-ul noii secvențe de lungime $q$.
+    \item \textbf{Gestionarea Egalității:} În cazul în care mai multe culori $c'$ din setul $B$ conduc la același range minim, selecția lui $c^*$ se face aleatoriu, fiecare candidat având o probabilitate egală de $1/|B|$ de a fi ales.
+\end{enumerate}
+    

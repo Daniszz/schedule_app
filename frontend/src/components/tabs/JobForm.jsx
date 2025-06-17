@@ -18,17 +18,15 @@ const JobForm = ({
   const handleResourceChange = (e) => {
     setJobData({
       ...jobData,
-      critical_resources: e.target.value, // e.target.value va fi array-ul de resurse selectate
+      critical_resources: e.target.value,
     });
   };
   return (
     <div className="h-screen flex flex-col">
-      {/* Header */}
       <div className="text-center mb-4 p-4">
         <h1 className="text-2xl font-bold">Jobs</h1>
       </div>
 
-      {/* Scrollable form section */}
       <div className="flex-1 overflow-y-auto px-4">
         <div className="flex justify-center w-full">
           <div className="w-full max-w-md space-y-6">
@@ -39,7 +37,6 @@ const JobForm = ({
               }}
               className="space-y-6"
             >
-              {/* Name Field */}
               <div className="form-control">
                 <label className="label">
                   <span className="label-text font-medium">Name</span>

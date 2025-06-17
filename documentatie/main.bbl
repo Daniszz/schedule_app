@@ -1,0 +1,63 @@
+\begin{thebibliography}{10}
+
+\bibitem{Costa1995}
+D.~Costa, A.~Hertz, and O.~Dubuis.
+\newblock Embedding of a sequential procedure within an evolutionary algorithm
+  for coloring problems in graphs.
+\newblock {\em Journal of Heuristics}, 1:105--128, 1995.
+
+\bibitem{Dorne1998}
+R.~Dorne and J.~K. Hao.
+\newblock A new genetic local search algorithm for graph coloring.
+\newblock In {\em Proceedings of PPSN'98}, Lecture Notes in Computer Science,
+  1998.
+\newblock To appear.
+
+\bibitem{dorne2000tabusearch}
+Raphael Dorne and Jin-Kao Hao.
+\newblock Tabu search for graph coloring, t-colorings and set t-colorings.
+\newblock In {\em Proceedings of a Conference on Graph Theory or
+  Combinatorics}, 2000.
+
+\bibitem{gabow1992edgecoloring}
+H.~Gabow and O.~Kariv.
+\newblock Algorithms for edge coloring bipartite graphs and multigraphs.
+\newblock {\em SIAM Journal on Computing}, 11(1):117--129, February 1992.
+
+\bibitem{gandhi2004approximating}
+R.~Gandhi, M.~M. Halld{\'o}rsson, G.~Kortsarz, and H.~Shachnai.
+\newblock Approximating non-preemptive open-shop scheduling and related
+  problems.
+\newblock In {\em Proceedings of the 31st International Colloquium on Automata,
+  Languages and Programming (ICALP)}, 2004.
+
+\bibitem{gandhi2004improved}
+R.~Gandhi, M.~M. Halld{\'o}rsson, G.~Kortsarz, and H.~Shachnai.
+\newblock Improved bounds for sum multicoloring and weighted completion time of
+  dependent jobs.
+\newblock Unpublished manuscript, 2004.
+
+\bibitem{garey1979computers}
+M.~R. Garey and D.~S. Johnson.
+\newblock {\em Computers and Intractability: A Guide to the Theory of
+  NP-Completeness}.
+\newblock W. H. Freeman, 1979.
+
+\bibitem{halldorsson2004multicoloring}
+Magnus~M. Halldórsson and Guy Kortsarz.
+\newblock Multicoloring: Problems and techniques.
+\newblock In {\em Lecture Notes in Computer Science}. Springer, 2004.
+\newblock Conference paper, August 2004.
+
+\bibitem{Papadimitriou1982}
+C.H. Papadimitriou and K.~Steiglitz.
+\newblock {\em Combinatorial Optimization: Algorithms and Complexity}.
+\newblock Prentice Hall, 1982.
+
+\bibitem{thevenin2016graph}
+Simon Thevenin, Nicolas Zufferey, and Jean-Yves Potvin.
+\newblock Graph multi-coloring for a job scheduling application.
+\newblock {\em European Journal of Operational Research}, 255(1):128--141,
+  2016.
+
+\end{thebibliography}

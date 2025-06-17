@@ -1,0 +1,124 @@
+
+\chapter{Multicolorarea în planificare joburilor}
+
+\section{Modelarea problemei de job scheduling ca graf}
+ 
+    În acest capitol vom începe discuția multicolorării într-un context precis, anume planificarea joburilor. Voi prezenta întâi un exemplu din viața reală pe baza căruia vom construi modelul problemei. 
+    
+    Problema noastră este întâlnită într-o companie internațională de produse cosmetice cu sediul în Geneva. Producția acestor loțiuni de înfrumusețare este caracterizată de cantități mari vândute și de o gamă largă de produse. Sistemul de producție utilizează un flux continuu și este foarte flexibil, așadar ușor de reconfigurat. Este clar că pentru fiecare tip de loțiune este necesară utilizarea simultană a mai multor resurse, cum ar fi: rezervoare cu diferite materii prime, mixere, angajați pentru operare și supervizare, chimiști pentru controlul calității și siguranței. Totuși datorită caracteristicilor lor tehnice, vom numi rezervoarele și chimiștii resurse critice, două produse ce necesită o resursă critică nu pot fi procesate concomitent. Fiecare ``job'' se referă la o cantitate (în unități de rezervor) dintr-un anumit tip de produs (loțiune) care trebuie livrată la un centru de distribuție. Fiecare job are un timp de procesare proporțional cu cantitatea de produs și de asemenea are asociat un câștig. Este important de menționat că nu există câștig pentru un job finalizat parțial.\cite{thevenin2016graph}
+
+  
+
+
+
+    Acestea fiind spuse, definim formal:
+    \begin{itemize}
+      \item Graful neorientat de incompabilitate $G=(V,E)$,unde:
+      \begin{itemize}
+        \item $V={1,2,\ldots,n}$  reprezintă mulțimea joburilor (produse de fabricat)
+        \item $E \subseteq V \times V$ reprezintă mulțimea muchiilor de incompabilitate
+        \item $(i,j) \in E$ dacă și numai dacă joburile i și j necesită aceeași resursă critică
+      \end{itemize}
+    Parametrii temporali:
+      \begin{itemize}
+        \item $D \in \mathbb{N}^*$ $-$ numărul total de unități de timp disponibile (deadline global)
+        \item $p_i \in \mathbb{N}^*$ $-$ timpul de procesare al jobului i (numărul de unități de timp necesare)
+        \item $C={1,2,\ldots,D}$ $-$ mulțimea culorilor disponibile (unități temporale)
+      \end{itemize}
+      \item Parametrii de resurse:
+      \begin{itemize}
+        \item $l \in \mathbb{N}^*$ $-$ numărul de unități de resurse partajate disponibile
+        \item $g_i \in \mathbb{R}^+$ $-$ profitul asociat jobului i (marja brută)      
+    \end{itemize}
+  \end{itemize}
+    
+    
+
+
+
+
+
+\section{Constrângei de alocare a resurselor și timpului}
+
+    Un aspect Problema P așadar constă în colorarea unui subset al grafului astfel încât să nu existe două vârfuri colorate identice optimizând simultan următoarele  obiectivele în ordine lexicografică: 
+    \begin{itemize}
+    \item f1: maximizarea câștigului total al joburilor în favoarea vârfurilor colorare. Cel mai important obiectiv, fiind direct legat de venitul total. 
+    \item f2: minimizarea numărului total de întreruperi ale joburilor. Ne dorim să nu avem întarziere și munca să fie productivă
+    \item f3: minimizarea timpului total de flux. Ne dorim reducerea costurilor de inventar, prin acest obiectiv se reduce volumul de ``muncă în curs de desfășurare''
+    \end{itemize}
+      
+    Spre deosebire de colorarea clasică, care nu include noțiuni de preempțiune, multicolorarea introduce explicit această noțiune, permițând ca sarcinile să fie întrerupte la puncte de timp întregi și reluate ulterior.Această flexibilitate este crucială în planificare, unde resursele pot fi realocate dinamic. Deși, în general, preempțiunea poate facilita rezolvarea problemelor de planificare, în medii de producție, aceasta poate duce la întreruperi costisitoare (ca întârzieri și muncă neproductivă). De aceea, în multe aplicații practice cum se întamplă în cazul nostru, se urmărește minimizarea numărului de întreruperi, chiar dacă preempțiunea este permisă. 
+
+    Pentru a defini complet problema P, este necesar să specificăm constrângerile matematice care modelează alocarea reserselor și timpului în cadrul problemei noastre. Ne vom folosi de modelul de graf definit anterior și de următoarele definiții a variabilelor de  decizie necesare pentru construirea modelului matematic:
+    \begin{Def} 
+    \begin{itemize}
+
+      \item $z_i =1 \text{ dacă vârful i este colorat complet, 0 altfel}$
+      \item $Max_i = \text{cea mai mare culoare atribuită vârfului i, 0 în cazul în care nu este colorat}$
+      
+      \item $Min_i = \text{cea mai mică culoare atribuită vârfului i, 0 în cazul în care nu este colorat}$
+      \item $s_{ic} = \text{1 dacă secvența de culori atribuită lui i începe sau este continuată (după o întrerupere) cu culoarea c, 0 altfel}$
+      \item $x_{ic} = \text{1 dacă vârful i are culoarea c, 0 altfel}$ 
+      \item $x_{ic},z_i,x_{ic} \in \{0,1\}$, $c \in C, i \in V$
+      \item $Min_i, Max_i \geq 0$, $i \in V$
+    \end{itemize}
+    \end{Def}
+    {\bf Constrângerile fundamentale:}
+    \begin{itemize}
+    \item Constrângerea de completare a colorării:
+    \begin{equation}
+      \sum_{c=1}^{D} x_{ic}= p_i \cdot z_i, \forall i \in V
+    \end{equation}
+    Asigură că fiecare vârf complet colorat primește exact $p_i$ culori distincte.
+
+    \item Constrângerea de capacitate a resurselor partajate:
+    \begin{equation}
+    \sum_{i \in V} x_{ic} \leq l, \forall c \in C
+    \end{equation}
+    Limitează numărul de joburi care pot fi execute simultan la numărul disponibil de resurse partajate l.
+
+    \item Consrângerea de incompabilitate:
+    \begin{equation}
+     x_{ic} + x_{jc} \leq 1, \forall c \in C, \forall (i,j) \in E
+    \end{equation}
+    Muchia $(i,j)$ reprezintă cum am menționat anterior incompabilitatea dintre joburile i și j. Prin această constrângere ne asigurăm ca joburile incompatibile nu pot fi executate în aceeași unitate de timp.      
+    \end{itemize}
+    {\bf Constrangerile obiectivelor:}
+
+    {\bf 1. Obiectivul f2(minimizarea numărului de întreruperi):}
+    \begin{itemize}
+      \item Detectarea începutului de secvență:
+      \begin{equation}
+        s_{ic} \geq x_{ic} - x_{i(c-1)}, \forall c \in C, \forall i \in V
+      \end{equation}
+      Această constrângere identifică fiecare reluare a execuției unui job și este folosită pnetru a calcula numărul total de întreruperi.
+    \end{itemize}
+    {\bf 2. Obiectivul f3(minimizarea timpului total de flux):}
+    \begin{itemize}
+      \item Valoarea maximă:
+      \begin{equation}
+        c \cdot x_{ic} \leq Max_i, \forall c \in C, \forall i \in V
+      \end{equation}
+      \item Valoarea minimă:
+      \begin{equation}
+        c \cdot x_{ic} + D \cdot (1-x_{ic}) \geq Min_i, \forall c \in C, \forall i \in V
+      \end{equation}
+      \item Validarea minimului pentru joburile colorate:
+      \begin{equation}
+        D \cdot z_i \geq Min_i, \forall i \in V
+      \end{equation}
+      Prin aceste constrângeri se determină poziția primei și ultimei unități planificate pentru fiecare job
+    \end{itemize}
+    
+    Ținând cont de toate definițiile și constrângerile enumerate până în acest punct, putem defeni modelul matematic al problemei astfel:
+    \begin{Def}
+      \begin{equation}
+        \max  \alpha_1 \cdot \sum_{i \in V} (z_i \cdot g_i) - \alpha_2 \cdot \sum_{i \in V} \sum_{c=1}^{D} s_{ic}  - \alpha_3 \cdot \sum_{i \in V} (Max_i - Min_i + z_i)
+      \end{equation}
+      Unde fiecare termen al sumei corespunde obiectivelor f1,f2,f3 si $\alpha_1, \alpha_2, \alpha_3$ sunt coeficienți pozitivi care definesc importanța fiecărui obiectiv în raport cu celelalte.
+    \end{Def}
+
+\section{Dificultatea problemei}
+   Problema multicolorării grafurilor, inclusiv varianta specifică pentru planficarea joburilor (problema P), este o problemă NP-hard. Această clasificare indică faptul că, pentru instanțe de dimensiuni mari, găsirea unui soluții optime într-un timp rezonabil (polinomial) este imposibilă din punct de vedere computațional. Cum putem demonstra caracterul NP-hard al problemei? Prin reducere acesteia la problema k-colorării, care este recunoscută ca fiind NP-completă\cite{garey1979computers}\cite{gabow1992edgecoloring}\cite{gandhi2004approximating}\cite{gandhi2004improved}, iar rezolvarea problemei P ar însemnă o rezolvare si a problemei k-colorării, lucru ce ar contrazice cunoștiințele din teoria complexității.
+ 
+   Este clar așadar că datorită dificultății acestei probleme, formulările de programare liniară cu numere întregi (ILP) ar putea să fie de folos doar pentru instanțele de dimensiuni mici. Pentru instanțele mai mari, devine necesară adoptarea unor abordări laternative. Aceste metode sunt reprezentate de metodele euristice și metaheuristice, ce oferă un soluții rezonabile ca calitate și timp de calcul necesar. În următorul capitol vom vorbi mai amănunțit despre aceste metode, împreună cu o implementare a acestora.
