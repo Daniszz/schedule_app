@@ -6,6 +6,8 @@ import {
   updateJob,
   viewJob,
   viewJobs,
+  deleteJobs,
+  updateJobPosition,
 } from "../controllers/job.controller.js";
 
 const router = express.Router();
@@ -21,5 +23,9 @@ router.get("/:id", viewJob);
 router.put("/:id", updateJob);
 
 router.delete("/:id", deleteJob);
+
+router.delete("/", deleteJobs);
+
+router.put("/:id/position", updateJobPosition);
 
 export default router;

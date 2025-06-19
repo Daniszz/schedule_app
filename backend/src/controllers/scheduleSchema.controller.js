@@ -4,13 +4,10 @@ import Job from "../models/job.model.js";
 export const viewSchemas = async (req, res) => {
   try {
     const schedules = await ScheduleSchema.find({
-      userId: req.user._id, // direct după utilizator
-    }).populate({
-      path: "jobs",
-      populate: {
-        path: "critical_resources",
-      },
-    });
+      userId: req.user._id,
+    })
+      .populate("jobs")
+      .populate("conflicts");
 
     res.json(schedules);
   } catch (error) {
@@ -18,9 +15,28 @@ export const viewSchemas = async (req, res) => {
   }
 };
 
+export const viewSchema = async (req, res) => {
+  try {
+    const schedule = await ScheduleSchema.findOne({
+      _id: req.params.id,
+      userId: req.user._id,
+    })
+      .populate("jobs")
+      .populate("conflicts");
+
+    if (!schedule) {
+      return res.status(404).json({ message: "Schema nu a fost găsită" });
+    }
+
+    res.json(schedule);
+  } catch (error) {
+    res.status(500).json({ message: "Eroare la preluarea schemei", error });
+  }
+};
+
 export const createSchema = async (req, res) => {
   try {
-    const { name, jobs, l, D } = req.body;
+    const { name, jobs, conflicts, l, D } = req.body;
 
     const invalidJobs = await Job.find({
       _id: { $in: jobs },
@@ -35,6 +51,7 @@ export const createSchema = async (req, res) => {
       userId: req.user._id,
       name,
       jobs,
+      conflicts,
       l,
       D,
       updated_at: Date.now(),
@@ -47,66 +64,29 @@ export const createSchema = async (req, res) => {
   }
 };
 
-export const viewSchema = async (req, res) => {
-  try {
-    // Verifică indirect prin job-uri dacă schema aparține userului
-    const schedule = await ScheduleSchema.findById(req.params.id).populate({
-      path: "jobs",
-      match: { userId: req.user._id }, // Filtrează doar job-urile userului
-      populate: { path: "critical_resources" },
-    });
-
-    if (!schedule || schedule.jobs.length === 0) {
-      return res
-        .status(404)
-        .json({ message: "Schemă nu a fost găsită sau nu aveți acces" });
-    }
-
-    res.json(schedule);
-  } catch (error) {
-    res.status(500).json({ message: "Eroare la preluarea schemei", error });
-  }
-};
-
 export const updateSchema = async (req, res) => {
   try {
-    const { name, jobs, l, D } = req.body;
+    const { name, jobs, conflicts, l, D } = req.body;
 
-    // 1. Verifică dacă schema conține job-uri ale userului
-    const existingSchedule = await ScheduleSchema.findById(
-      req.params.id
-    ).populate({
-      path: "jobs",
-      match: { userId: req.user._id },
-    });
-
-    if (!existingSchedule || existingSchedule.jobs.length === 0) {
-      return res.status(404).json({ message: "Schemă invalidă" });
-    }
-
-    // 2. Verifică noile job-uri (dacă există în cerere)
-    if (jobs) {
-      const invalidJobs = await Job.find({
-        _id: { $in: jobs },
-        userId: { $ne: req.user._id },
-      });
-      if (invalidJobs.length > 0) {
-        return res.status(403).json({ message: "Unele job-uri nu vă aparțin" });
-      }
-    }
-
-    // 3. Actualizează
-    const updatedSchedule = await ScheduleSchema.findByIdAndUpdate(
-      req.params.id,
+    const updatedSchedule = await ScheduleSchema.findOneAndUpdate(
+      {
+        _id: req.params.id,
+        userId: req.user._id,
+      },
       {
         name,
-        ...(jobs && { jobs }), // Actualizează jobs doar dacă este în req.body
+        jobs,
+        conflicts,
         l,
         D,
         updated_at: Date.now(),
       },
-      { new: true } // Returnează documentul actualizat
+      { new: true }
     );
+
+    if (!updatedSchedule) {
+      return res.status(404).json({ message: "Schema nu a fost găsită" });
+    }
 
     res.json(updatedSchedule);
   } catch (error) {
@@ -116,20 +96,16 @@ export const updateSchema = async (req, res) => {
 
 export const deleteSchema = async (req, res) => {
   try {
-    // Șterge doar dacă schema conține job-uri ale userului
-    const scheduleToDelete = await ScheduleSchema.findOne({
+    const deletedSchedule = await ScheduleSchema.findOneAndDelete({
       _id: req.params.id,
-      jobs: {
-        $in: await Job.find({ userId: req.user._id }).distinct("_id"),
-      },
+      userId: req.user._id,
     });
 
-    if (!scheduleToDelete) {
-      return res.status(404).json({ message: "Schemă nu a fost găsită" });
+    if (!deletedSchedule) {
+      return res.status(404).json({ message: "Schema nu a fost găsită" });
     }
 
-    await ScheduleSchema.deleteOne({ _id: req.params.id });
-    res.json({ message: "Schemă ștearsă cu succes" });
+    res.json({ message: "Schema a fost ștearsă cu succes" });
   } catch (error) {
     res.status(500).json({ message: "Eroare la ștergerea schemei", error });
   }

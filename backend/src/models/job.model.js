@@ -5,9 +5,10 @@ const jobSchema = new mongoose.Schema({
   name: { type: String, required: true },
   processing_time: { type: Number, required: true },
   gain: { type: Number, required: true },
-  critical_resources: [
-    { type: mongoose.Schema.Types.ObjectId, ref: "CriticalResource" },
-  ],
+  position: {
+    x: { type: Number, required: true, default: 0 },
+    y: { type: Number, required: true, default: 0 },
+  },
 });
 const Job = mongoose.model("Job", jobSchema);
 export default Job;

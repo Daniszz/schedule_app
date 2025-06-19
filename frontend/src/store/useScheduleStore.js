@@ -3,19 +3,39 @@ import toast from "react-hot-toast";
 import { axiosInstance } from "../lib/axios";
 
 export const useScheduleStore = create((set, get) => ({
-  scheduledItem: [],
+  isScheduleCreating: false,
+  isScheduleRunning: false,
   isScheduleLoading: false,
+  schedules: [],
+  currentSchedule: null,
+  scheduleResults: [],
 
-  getSchedule: async () => {
+  createSchedule: async (data) => {
+    set({ isScheduleCreating: true });
+    try {
+      const res = await axiosInstance.post("/schedule", data);
+      toast.success("Schedule created successfully");
+      get().fetchSchedules();
+      return res.data;
+    } catch (error) {
+      toast.error("Failed to create schedule");
+      throw error;
+    } finally {
+      set({ isScheduleCreating: false });
+    }
+  },
+  fetchSchedules: async () => {
     set({ isScheduleLoading: true });
     try {
-      const res = await axiosInstance.get("/scheduleSchema");
-      set({ scheduledItem: res.data });
-      console.log(res.data);
+      const res = await axiosInstance.get("/schedule");
+      set({ schedules: res.data });
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error("Failed to fetch schedules");
     } finally {
       set({ isScheduleLoading: false });
     }
+  },
+  setCurrentSchedule: (schedule) => {
+    set({ currentSchedule: schedule });
   },
 }));

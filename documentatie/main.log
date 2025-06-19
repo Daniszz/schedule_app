@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2025.6.3)  17 JUN 2025 12:23
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2025.6.3)  19 JUN 2025 23:11
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -480,7 +480,7 @@ l.54     \input{front/declaration2}
 pdfTeX warning (ext4): destination with the same identifier (name{page.}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.24 ...sline {chapter}{Concluzii}{27}{chapter*.4}
+l.24 ...sline {chapter}{Concluzii}{28}{chapter*.4}
                                                   % [3
 
 ])
@@ -596,43 +596,40 @@ Capitolul 4.
 pdfTeX warning (ext4): destination with the same identifier (name{table.4.1}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.41     \item p
+l.42     \item p
                 rocentajul de vârfuri utilizat în generarea vecinătății...]
-Overfull \hbox (7.85556pt too wide) in paragraph at lines 48--49
+Overfull \hbox (7.85556pt too wide) in paragraph at lines 51--52
 []\OT1/ppl/m/n/12 Instan[]ele de test vor fi []^^Pncadrate in 3 ta-bele dis-tincte, gru-pate []^^Pn func[]ie de num[]arul
  []
 
 
-Overfull \hbox (19.95615pt too wide) in paragraph at lines 48--49
+Overfull \hbox (19.95615pt too wide) in paragraph at lines 51--52
 \OT1/ppl/m/n/12 de v[]arfuri $\OML/cmm/m/it/12 n$ \OT1/ppl/m/n/12 ast-fel []^^Pnc[]at s[]a se eviden[]ieze com-por-ta-men-tul al-go-rit-mi-lor []^^Pn ca-drul instan[]elor
  []
 
 
-Overfull \hbox (24.3468pt too wide) in paragraph at lines 83--107
+
+[24]
+Overfull \hbox (42.3468pt too wide) in paragraph at lines 115--139
  [][][] 
  []
 
 
 
-[24
+[25
 pdfTeX warning (ext4): destination with the same identifier (name{table.4.2}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.108 
-      ]) (chapters/chapter5.tex
-Overfull \hbox (6.04228pt too wide) in paragraph at lines 112--1
-[]\OT1/ppl/m/n/12 In ca-drul ex-pe-ri-men-te-lor, tim-pul de execu[]ie nu a fost uti-li-zat ca me-tric[]a de performan[][]a,
- []
-
-
-Overfull \hbox (9.52257pt too wide) in paragraph at lines 112--1
-\OT1/ppl/m/n/12 num[]arul de res-tar-turi) a fost ca-li-brat ast-fel []^^Pnc[]at tim-pul to-tal de execu[]ie s[]a nu dep[]a[]easc[]a
- []
-
-
-
-[25
+l.140 
+      
 pdfTeX warning (ext4): destination with the same identifier (name{table.4.3}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.140 
+      ]) (chapters/chapter5.tex
+
+[26
+pdfTeX warning (ext4): destination with the same identifier (name{table.4.4}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
 l.1 \chapter
@@ -640,11 +637,11 @@ l.1 \chapter
 Capitolul 5.
 ) (chapters/conclusions.tex
 
-[26
+[27
 
 ]) (main.bbl
 
-[27
+[28
 
 ]
 Underfull \hbox (badness 1342) in paragraph at lines 58--62
@@ -653,11 +650,11 @@ Underfull \hbox (badness 1342) in paragraph at lines 58--62
 
 
 
-[28
+[29
 
 ])
 
-[29] (main.aux)
+[30] (main.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-04-29>
@@ -666,17 +663,17 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: 7735E0FE57864C7025C376901F963230;5075.
  ) 
 Here is how much of TeX's memory you used:
- 12772 strings out of 469922
- 203195 string characters out of 5469150
- 610749 words of memory out of 5000000
- 39246 multiletter control sequences out of 15000+600000
+ 12775 strings out of 469922
+ 203231 string characters out of 5469150
+ 610802 words of memory out of 5000000
+ 39247 multiletter control sequences out of 15000+600000
  662298 words of font info for 139 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  75i,11n,79p,1315b,644s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/hritc/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/hritc/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/hritc/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/Users/hritc/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi6.pfb><C:/Users/hritc/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users/hritc/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/hritc/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/hritc/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/hritc/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/hritc/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy6.pfb><C:/Users/hritc/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Users/hritc/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb><C:/Users/hritc/AppData/Local/Programs/MiKTeX/fonts/type1/urw/palatino/uplb8a.pfb><C:/Users/hritc/AppData/Local/Programs/MiKTeX/fonts/type1/urw/palatino/uplr8a.pfb><C:/Users/hritc/AppData/Local/Programs/MiKTeX/fonts/type1/urw/palatino/uplri8a.pfb>
-Output written on main.pdf (34 pages, 325684 bytes).
+Output written on main.pdf (35 pages, 328394 bytes).
 PDF statistics:
- 431 PDF objects out of 1000 (max. 8388607)
- 99 named destinations out of 1000 (max. 500000)
+ 436 PDF objects out of 1000 (max. 8388607)
+ 101 named destinations out of 1000 (max. 500000)
  198 words of extra memory for PDF output out of 10000 (max. 10000000)
 

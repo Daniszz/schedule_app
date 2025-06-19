@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const scheduleResultSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  schema_id: {
+  schemaId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "ScheduleSchema",
     required: true,
@@ -15,6 +15,7 @@ const scheduleResultSchema = new mongoose.Schema({
   f1: Number,
   f2: Number,
   f3: Number,
+  algorithm_used: { type: String },
 });
 
 const ScheduleSchemaResult = mongoose.model(

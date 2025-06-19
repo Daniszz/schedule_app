@@ -13,7 +13,7 @@ import { useEffect } from "react";
 
 import { Loader } from "lucide-react";
 import { Toaster } from "react-hot-toast";
-
+import JobScheduler from "./components/schedular/JobSchedular";
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth, onlineUsers } = useAuthStore();
   const { theme } = useThemeStore();
@@ -38,7 +38,7 @@ const App = () => {
       <Routes>
         <Route
           path="/"
-          element={authUser ? <HomePage /> : <Navigate to="/login" />}
+          element={authUser ? <JobScheduler /> : <Navigate to="/login" />}
         />
         <Route
           path="/signup"

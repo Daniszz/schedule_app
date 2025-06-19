@@ -15,11 +15,11 @@
 \contentsline {section}{\numberline {3.3}Algoritmul Tabu Search}{18}{section.3.3}%
 \contentsline {chapter}{\numberline {4}Experimente și rezultate}{22}{chapter.4}%
 \contentsline {section}{\numberline {4.1}Măsurători și metrici}{22}{section.4.1}%
-\contentsline {section}{\numberline {4.2}Interpretarea rezultatelor și concluzii parțiale}{25}{section.4.2}%
-\contentsline {chapter}{\numberline {5}Dezvoltarea aplicației web}{26}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Arhitectura generală a aplicației}{26}{section.5.1}%
-\contentsline {section}{\numberline {5.2} Prelucrarea și introducerea datelor în aplicație}{26}{section.5.2}%
-\contentsline {section}{\numberline {5.3}Modulul de multicolorare și interfața utilizator}{26}{section.5.3}%
-\contentsline {section}{\numberline {5.4}Testare și funcționalități implementate}{26}{section.5.4}%
-\contentsline {chapter}{Concluzii}{27}{chapter*.4}%
-\contentsline {chapter}{Bibliografie}{28}{chapter*.5}%
+\contentsline {section}{\numberline {4.2}Interpretarea rezultatelor și concluzii parțiale}{26}{section.4.2}%
+\contentsline {chapter}{\numberline {5}Dezvoltarea aplicației web}{27}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Arhitectura generală a aplicației}{27}{section.5.1}%
+\contentsline {section}{\numberline {5.2} Prelucrarea și introducerea datelor în aplicație}{27}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Modulul de multicolorare și interfața utilizator}{27}{section.5.3}%
+\contentsline {section}{\numberline {5.4}Testare și funcționalități implementate}{27}{section.5.4}%
+\contentsline {chapter}{Concluzii}{28}{chapter*.4}%
+\contentsline {chapter}{Bibliografie}{29}{chapter*.5}%

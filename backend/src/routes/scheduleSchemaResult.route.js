@@ -3,9 +3,8 @@ import express from "express";
 import { protectRoute } from "../middleware/auth.middleware.js";
 import {
   createResult,
-  deletedResult,
+  deleteResult,
   detailedResult,
-  viewResult,
   viewResults,
 } from "../controllers/scheduleSchemaResult.controller.js";
 
@@ -15,13 +14,10 @@ router.use(protectRoute);
 
 router.get("/", viewResults);
 
-router.get("/schema/:schemaId", viewResult);
-
 router.post("/:schemaId/run", createResult);
 
-// GET /results/:id - Detalii rezultat specific
 router.get("/:id", detailedResult);
 
-router.delete("/:id", deletedResult);
+router.delete("/:id", deleteResult);
 
 export default router;

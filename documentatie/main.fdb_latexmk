@@ -1,13 +1,13 @@
 # Fdb version 4
-["bibtex main"] 1750074394.28008 "main.aux" "main.bbl" "main" 1750152201.16822 0
+["bibtex main"] 1750229037.54422 "main.aux" "main.bbl" "main" 1750363868.58519 0
   "./chapters/referinte.bib" 1749561383 2979 ff94df14ce1346f4ccf8305c11f491f0 ""
   "C:/Users/hritc/AppData/Local/Programs/MiKTeX/bibtex/bst/bibtex/plain.bst" 1291864736 20613 bd3fbfa9f64872b81ac57a0dd2ed855f ""
-  "main.aux" 1750152200 6636 c1314c841d0df1fef0ceaaef7f1f14ca "pdflatex"
+  "main.aux" 1750363867 6860 cc3699f5d2de7001aab3100c833a51c1 "pdflatex"
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["pdflatex"] 1750152199.54809 "c:/Users/hritc/OneDrive/Documents/GitHub/schedule_app/documentatie/main.tex" "main.pdf" "main" 1750152201.169 0
+["pdflatex"] 1750363866.90359 "c:/Users/hritc/OneDrive/Documents/GitHub/schedule_app/documentatie/main.tex" "main.pdf" "main" 1750363868.58592 0
   "C:/Users/hritc/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1750022015 82684 3a87f55ef758bc5fe6abfed9a40cca26 ""
   "C:/Users/hritc/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1748953697 13159365 43bfe7b811f9fafa81057409ca2890fd ""
   "C:/Users/hritc/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc" 1458473887 4993 80dc9bab7f31fb78a000ccfed0e27cab ""
@@ -135,7 +135,7 @@
   "chapters/chapter1.tex" 1749544082 9768 20a3a8cf6d60eea6d8e3384a3549d42e ""
   "chapters/chapter2.tex" 1749562108 9179 ddefce54970005ab52b1333613f481ca ""
   "chapters/chapter3.tex" 1749931519 15823 81512f6c813481267857fa40dad6430f ""
-  "chapters/chapter4.tex" 1750152198 8731 8ca97be7411d3ef79932edbd88117516 ""
+  "chapters/chapter4.tex" 1750363868 10467 74ba7b3fa6caaed2eeeefe12619bed1b ""
   "chapters/chapter5.tex" 1749660770 273 0013cc3f891d635a6406349333b2b05b ""
   "chapters/conclusions.tex" 1749560881 65 e7e2a0ea93879df4f4d54efb2ddadf39 ""
   "chapters/introduction.tex" 1749544082 1402 a1a0f3a42ec6dfde3a60031037bbb004 ""
@@ -146,11 +146,11 @@
   "front/macros.tex" 1749544082 1333 d2d06356d6a02cd0a96946c1a31142ba ""
   "front/titlepage.tex" 1749544082 718 9b999d56f8c42a073332b1e814d4075e ""
   "images/logoFii.png" 1749544084 8760 6cadb4d6bceaebdb4a807a9f540667f4 ""
-  "main.aux" 1750152200 6636 c1314c841d0df1fef0ceaaef7f1f14ca "pdflatex"
-  "main.bbl" 1750074394 2353 a2b8da1018b39697be9142595891996d "bibtex main"
-  "main.out" 1750152200 5075 7735e0fe57864c7025c376901f963230 "pdflatex"
+  "main.aux" 1750363867 6860 cc3699f5d2de7001aab3100c833a51c1 "pdflatex"
+  "main.bbl" 1750229037 2353 a2b8da1018b39697be9142595891996d "bibtex main"
+  "main.out" 1750363867 5075 7735e0fe57864c7025c376901f963230 "pdflatex"
   "main.tex" 1750022009 1995 449d9008bb5c00283a083381032ccf19 ""
-  "main.toc" 1750152200 2143 ce7e25be6d9476aeacca778aaa514a28 "pdflatex"
+  "main.toc" 1750363867 2143 36e9f40ba91367189976ea8c8524a681 "pdflatex"
   (generated)
   "main.aux"
   "main.log"
