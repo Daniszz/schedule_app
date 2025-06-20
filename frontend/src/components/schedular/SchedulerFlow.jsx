@@ -10,7 +10,6 @@ import { nodeTypes } from "../../constants/nodeTypes";
 import { useSchedulerLogic } from "../../hooks/useSchedulerLogic";
 import ControlPanel from "./ControlPanel";
 import AddJobModal from "./AddJobModal";
-import CreateScheduleModal from "./CreateScheduleModal";
 import LoadingSpinner from "../ui/LoadingSpinner";
 
 export default function SchedulerFlow() {
@@ -32,6 +31,7 @@ export default function SchedulerFlow() {
     conflicts,
     currentSchedule,
     scheduleResults,
+    currentResult,
     // Loading states
     isJobLoading,
     isJobCreating,
@@ -64,7 +64,12 @@ export default function SchedulerFlow() {
         isScheduleRunning={isScheduleRunning}
         getTotalGain={getTotalGain}
         getTotalProcessingTime={getTotalProcessingTime}
-        setIsCreatingSchedule={setIsCreatingSchedule}
+        currentResult={currentResult}
+        // ✅ Adaugă props-urile noi:
+        scheduleParams={scheduleParams}
+        setScheduleParams={setScheduleParams}
+        isScheduleCreating={isScheduleCreating}
+        handleCreateSchedule={handleCreateSchedule}
         setIsAddingJob={setIsAddingJob}
         handleRunSchedule={handleRunSchedule}
         clearAll={clearAll}
@@ -79,19 +84,6 @@ export default function SchedulerFlow() {
           isJobCreating={isJobCreating}
           addNewJob={addNewJob}
           setIsAddingJob={setIsAddingJob}
-        />
-      )}
-
-      {/* Create Schedule Modal */}
-      {isCreatingSchedule && (
-        <CreateScheduleModal
-          scheduleParams={scheduleParams}
-          setScheduleParams={setScheduleParams}
-          jobs={jobs}
-          conflicts={conflicts}
-          isScheduleCreating={isScheduleCreating}
-          handleCreateSchedule={handleCreateSchedule}
-          setIsCreatingSchedule={setIsCreatingSchedule}
         />
       )}
 

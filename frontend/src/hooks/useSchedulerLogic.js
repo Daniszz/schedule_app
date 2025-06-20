@@ -3,6 +3,7 @@ import { addEdge } from "reactflow";
 import { useJobStore } from "../store/useJobStore";
 import { useConflictStore } from "../store/useConflictStore";
 import { useScheduleStore } from "../store/useScheduleStore";
+import { useScheduleResultStore } from "../store/useScheduleResultStore";
 
 export function useSchedulerLogic({ setNodes, setEdges }) {
   const [newJob, setNewJob] = useState({
@@ -31,47 +32,60 @@ export function useSchedulerLogic({ setNodes, setEdges }) {
     isJobLoading,
   } = useJobStore();
 
-  const {
-    conflicts,
-    createConflict,
-    fetchConflicts,
-    deleteConflict,
-    isConflictCreating,
-  } = useConflictStore();
+  const { conflicts, createConflict, fetchConflicts, deleteConflict } =
+    useConflictStore();
+
   const {
     currentSchedule,
-    runSchedule,
     createSchedule,
-    isScheduleRunning,
     isScheduleCreating,
-    scheduleResults,
-    fetchScheduleResults,
+
+    fetchSchedules,
+    setCurrentSchedule,
   } = useScheduleStore();
+
+  const {
+    results: scheduleResults,
+    isRunning: isScheduleRunning,
+    runScheduleSchema,
+    fetchResults,
+    currentResult,
+    setCurrentResult,
+  } = useScheduleResultStore();
 
   // Load data on mount
   useEffect(() => {
     fetchJobs();
     fetchConflicts();
-  }, []);
+    fetchSchedules();
+    fetchResults();
+  }, [fetchJobs, fetchConflicts, fetchSchedules, fetchResults]);
 
   // Update nodes when jobs change
   useEffect(() => {
-    const newNodes = jobs.map((job, index) => ({
-      id: job._id,
-      type: "jobNode",
-      position: job.position || { x: 100, y: 100 },
+    const newNodes = jobs.map((job, index) => {
+      // Check if job is in the latest result's fully_colored_jobs
+      const isColored =
+        currentResult &&
+        currentResult.fully_colored_jobs?.some(
+          (coloredJobId) => coloredJobId.toString() === job._id.toString()
+        );
 
-      data: {
-        ...job,
-        isEditing: false,
-        nodeColor: currentSchedule?.color_map?.get?.(job._id)
-          ? "#3b82f6"
-          : null,
-      },
-    }));
+      return {
+        id: job._id,
+        type: "jobNode",
+        position: job.position || { x: 100, y: 100 },
+        data: {
+          ...job,
+          isEditing: false,
+          nodeColor: isColored ? "#10b981" : null, // Green for colored jobs
+        },
+      };
+    });
+
     setNodes(newNodes);
     nodeIdRef.current = jobs.length + 1;
-  }, [jobs, currentSchedule, setNodes]);
+  }, [jobs, scheduleResults, setNodes]);
 
   // Update edges when conflicts change
   useEffect(() => {
@@ -96,9 +110,10 @@ export function useSchedulerLogic({ setNodes, setEdges }) {
     },
     [createConflict]
   );
+
   const handleNodeDragStop = async (event, node) => {
     try {
-      await updateJobPosition(node.id, node.position); // only send position
+      await updateJobPosition(node.id, node.position);
     } catch (error) {
       console.error("Failed to update node position:", error);
     }
@@ -118,7 +133,6 @@ export function useSchedulerLogic({ setNodes, setEdges }) {
 
   const handleCreateSchedule = async () => {
     if (!scheduleParams.name.trim()) {
-      // You might want to use a toast library here
       console.error("Please enter a schedule name");
       return;
     }
@@ -138,6 +152,10 @@ export function useSchedulerLogic({ setNodes, setEdges }) {
       };
 
       const result = await createSchedule(scheduleData);
+
+      // Set the newly created schedule as current
+      setCurrentSchedule(result);
+
       console.log("Schedule created successfully");
       setScheduleParams({ name: "", l: 1, D: 1 });
       setIsCreatingSchedule(false);
@@ -153,7 +171,9 @@ export function useSchedulerLogic({ setNodes, setEdges }) {
     }
 
     try {
-      await runSchedule(currentSchedule._id);
+      const result = await runScheduleSchema(currentSchedule._id);
+      setCurrentResult(result);
+      console.log(result);
     } catch (error) {
       console.error("Failed to run schedule:", error);
     }
@@ -163,10 +183,13 @@ export function useSchedulerLogic({ setNodes, setEdges }) {
     try {
       await deleteAllJobs();
       await fetchConflicts();
+      setCurrentSchedule(null);
+      setCurrentResult(null);
     } catch (error) {
       console.error("Failed to delete all jobs:", error);
     }
   };
+
   const handleEdgesDelete = async (edges) => {
     try {
       for (const edge of edges) {
@@ -195,6 +218,7 @@ export function useSchedulerLogic({ setNodes, setEdges }) {
     isAddingJob,
     setIsAddingJob,
     scheduleParams,
+
     setScheduleParams,
     isCreatingSchedule,
     setIsCreatingSchedule,
@@ -203,6 +227,7 @@ export function useSchedulerLogic({ setNodes, setEdges }) {
     conflicts,
     currentSchedule,
     scheduleResults,
+    currentResult,
     // Loading states
     isJobLoading,
     isJobCreating,

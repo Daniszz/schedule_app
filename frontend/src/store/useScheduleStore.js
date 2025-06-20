@@ -4,11 +4,10 @@ import { axiosInstance } from "../lib/axios";
 
 export const useScheduleStore = create((set, get) => ({
   isScheduleCreating: false,
-  isScheduleRunning: false,
+
   isScheduleLoading: false,
   schedules: [],
   currentSchedule: null,
-  scheduleResults: [],
 
   createSchedule: async (data) => {
     set({ isScheduleCreating: true });
