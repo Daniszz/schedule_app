@@ -39,7 +39,7 @@ export function useSchedulerLogic({ setNodes, setEdges }) {
     currentSchedule,
     createSchedule,
     isScheduleCreating,
-
+    updateSchedule,
     fetchSchedules,
     setCurrentSchedule,
   } = useScheduleStore();
@@ -87,6 +87,15 @@ export function useSchedulerLogic({ setNodes, setEdges }) {
     nodeIdRef.current = jobs.length + 1;
   }, [jobs, scheduleResults, setNodes]);
 
+  useEffect(() => {
+    if (currentSchedule) {
+      setScheduleParams({
+        name: currentSchedule.name,
+        l: currentSchedule.l,
+        D: currentSchedule.D,
+      });
+    }
+  }, [currentSchedule]);
   // Update edges when conflicts change
   useEffect(() => {
     const newEdges = conflicts.map((conflict) => ({
@@ -161,6 +170,31 @@ export function useSchedulerLogic({ setNodes, setEdges }) {
       setIsCreatingSchedule(false);
     } catch (error) {
       console.error("Failed to create schedule:", error);
+    }
+  };
+  const handleUpdateSchedule = async () => {
+    if (!currentSchedule) {
+      console.error("No schedule selected to update");
+      return;
+    }
+
+    try {
+      const updatedData = {
+        name: scheduleParams.name || currentSchedule.name,
+        jobs: jobs.map((job) => job._id),
+        conflicts: conflicts.map((conflict) => conflict._id),
+        l: scheduleParams.l,
+        D: scheduleParams.D,
+      };
+
+      const result = await updateSchedule(currentSchedule._id, updatedData);
+
+      setCurrentSchedule(result);
+
+      console.log("Schedule updated successfully");
+      setIsCreatingSchedule(false);
+    } catch (error) {
+      console.error("Failed to update schedule:", error);
     }
   };
 
@@ -240,6 +274,7 @@ export function useSchedulerLogic({ setNodes, setEdges }) {
     handleCreateSchedule,
     handleEdgesDelete,
     handleRunSchedule,
+    handleUpdateSchedule,
     clearAll,
     getTotalGain,
     getTotalProcessingTime,

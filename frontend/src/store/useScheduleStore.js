@@ -34,6 +34,27 @@ export const useScheduleStore = create((set, get) => ({
       set({ isScheduleLoading: false });
     }
   },
+  updateSchedule: async (scheduleId, data) => {
+    set({ isScheduleCreating: true });
+    try {
+      const res = await axiosInstance.put(`/schedule/${scheduleId}`, data);
+      toast.success("Schedule updated successfully");
+
+      await get().fetchSchedules();
+
+      const current = get().currentSchedule;
+      if (current && current._id === scheduleId) {
+        set({ currentSchedule: res.data });
+      }
+
+      return res.data;
+    } catch (error) {
+      toast.error("Failed to update schedule");
+      throw error;
+    } finally {
+      set({ isScheduleCreating: false });
+    }
+  },
   setCurrentSchedule: (schedule) => {
     set({ currentSchedule: schedule });
   },

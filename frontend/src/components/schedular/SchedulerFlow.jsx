@@ -42,6 +42,7 @@ export default function SchedulerFlow() {
     handleNodeDragStop,
     addNewJob,
     handleCreateSchedule,
+    handleUpdateSchedule,
     handleRunSchedule,
     handleEdgesDelete,
     clearAll,
@@ -65,11 +66,11 @@ export default function SchedulerFlow() {
         getTotalGain={getTotalGain}
         getTotalProcessingTime={getTotalProcessingTime}
         currentResult={currentResult}
-        // ✅ Adaugă props-urile noi:
         scheduleParams={scheduleParams}
         setScheduleParams={setScheduleParams}
         isScheduleCreating={isScheduleCreating}
         handleCreateSchedule={handleCreateSchedule}
+        handleUpdateSchedule={handleUpdateSchedule}
         setIsAddingJob={setIsAddingJob}
         handleRunSchedule={handleRunSchedule}
         clearAll={clearAll}
