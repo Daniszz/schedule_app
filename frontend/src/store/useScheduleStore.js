@@ -4,7 +4,6 @@ import { axiosInstance } from "../lib/axios";
 
 export const useScheduleStore = create((set, get) => ({
   isScheduleCreating: false,
-
   isScheduleLoading: false,
   schedules: [],
   currentSchedule: null,
@@ -34,11 +33,15 @@ export const useScheduleStore = create((set, get) => ({
       set({ isScheduleLoading: false });
     }
   },
-  updateSchedule: async (scheduleId, data) => {
+
+  // MODIFICARE AICI: Permite suprimarea toast-ului
+  updateSchedule: async (scheduleId, data, showToast = true) => {
     set({ isScheduleCreating: true });
     try {
       const res = await axiosInstance.put(`/schedule/${scheduleId}`, data);
-      toast.success("Schedule updated successfully");
+      if (showToast) {
+        toast.success("Schedule updated successfully");
+      }
 
       await get().fetchSchedules();
 
@@ -49,10 +52,29 @@ export const useScheduleStore = create((set, get) => ({
 
       return res.data;
     } catch (error) {
-      toast.error("Failed to update schedule");
+      if (showToast) {
+        toast.error("Failed to update schedule");
+      }
       throw error;
     } finally {
       set({ isScheduleCreating: false });
+    }
+  },
+
+  deleteSchedule: async (scheduleId) => {
+    try {
+      await axiosInstance.delete(`/schedule/${scheduleId}`);
+      toast.success("Schedule deleted successfully");
+
+      await get().fetchSchedules();
+
+      const current = get().currentSchedule;
+      if (current && current._id === scheduleId) {
+        set({ currentSchedule: null });
+      }
+    } catch (error) {
+      toast.error("Failed to delete schedule");
+      throw error;
     }
   },
   setCurrentSchedule: (schedule) => {

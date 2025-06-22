@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import ReactFlow, {
   MiniMap,
   Controls,
@@ -6,7 +6,7 @@ import ReactFlow, {
   useNodesState,
   useEdgesState,
 } from "reactflow";
-import { nodeTypes } from "../../constants/nodeTypes";
+import JobNode from "./JobNode";
 import { useSchedulerLogic } from "../../hooks/useSchedulerLogic";
 import ControlPanel from "./ControlPanel";
 import AddJobModal from "./AddJobModal";
@@ -17,7 +17,6 @@ export default function SchedulerFlow() {
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
   const {
-    // State
     newJob,
     setNewJob,
     isAddingJob,
@@ -25,32 +24,89 @@ export default function SchedulerFlow() {
     scheduleParams,
     setScheduleParams,
     isCreatingSchedule,
-    setIsCreatingSchedule,
-    // Store data
+    isViewingResultMode,
+    setIsViewingResultMode,
     jobs,
     conflicts,
     currentSchedule,
     scheduleResults,
     currentResult,
-    // Loading states
-    isJobLoading,
-    isJobCreating,
-    isScheduleCreating,
     isScheduleRunning,
-    // Actions
-    onConnect,
-    handleNodeDragStop,
-    addNewJob,
+    isScheduleUpdating,
+    onConnect: handleConnectLogic,
+    handleNodeDragStop: handleNodeDragStopLogic,
+    addNewJob: addNewJobLogic,
     handleCreateSchedule,
     handleUpdateSchedule,
+    handleSaveAsNew,
     handleRunSchedule,
-    handleEdgesDelete,
+    handleEdgesDelete: onDeleteEdgesLogic,
+    handleNodesDelete: onDeleteNodesLogic,
     clearAll,
+    backToEditingMode,
     getTotalGain,
     getTotalProcessingTime,
-  } = useSchedulerLogic({ setNodes, setEdges });
+    handleUpdateJobNodeData,
+    handleDeleteJobNode,
+  } = useSchedulerLogic({ setNodes, setEdges, nodes, edges });
 
-  if (isJobLoading) {
+  // Define nodeTypes mapping here, passing custom props to JobNode
+  const nodeTypes = React.useMemo(
+    () => ({
+      jobNode: (nodeProps) => (
+        <JobNode
+          {...nodeProps}
+          onUpdateJob={handleUpdateJobNodeData}
+          onDeleteJob={handleDeleteJobNode}
+          isScheduleUpdating={isScheduleUpdating}
+          isViewingResultMode={isViewingResultMode} // Ensure this is passed
+        />
+      ),
+    }),
+    [
+      handleUpdateJobNodeData,
+      handleDeleteJobNode,
+      isScheduleUpdating,
+      isViewingResultMode, // Important: re-memoize if this changes
+    ]
+  );
+
+  // --- React Flow Callback Wrappers ---
+  // These wrappers apply changes to React Flow's internal state (via onNodesChange/onEdgesChange)
+  // but only if not in result viewing mode and a schedule is selected.
+  // The logic in useSchedulerLogic then manages *persisting* these changes.
+
+  const handleNodesChange = useCallback(
+    (changes) => {
+      if (!isViewingResultMode && currentSchedule) {
+        onNodesChange(changes); // Apply changes to React Flow's internal state
+      } else if (!currentSchedule) {
+        console.warn("Cannot change nodes: No schedule selected.");
+      } else {
+        // No need to log this if interactive={false} is set globally,
+        // as the user won't be able to initiate these changes.
+        // console.warn("Cannot change nodes in result viewing mode.");
+      }
+    },
+    [onNodesChange, isViewingResultMode, currentSchedule]
+  );
+
+  const handleEdgesChange = useCallback(
+    (changes) => {
+      if (!isViewingResultMode && currentSchedule) {
+        onEdgesChange(changes); // Apply changes to React Flow's internal state
+      } else if (!currentSchedule) {
+        console.warn("Cannot change edges: No schedule selected.");
+      } else {
+        // No need to log this if interactive={false} is set globally.
+        // console.warn("Cannot change edges in result viewing mode.");
+      }
+    },
+    [onEdgesChange, isViewingResultMode, currentSchedule]
+  );
+
+  // Consolidated loading check for the entire component
+  if (isScheduleUpdating || isCreatingSchedule || isScheduleRunning) {
     return <LoadingSpinner />;
   }
 
@@ -68,35 +124,41 @@ export default function SchedulerFlow() {
         currentResult={currentResult}
         scheduleParams={scheduleParams}
         setScheduleParams={setScheduleParams}
-        isScheduleCreating={isScheduleCreating}
+        isScheduleCreating={isCreatingSchedule}
+        isScheduleUpdating={isScheduleUpdating}
         handleCreateSchedule={handleCreateSchedule}
         handleUpdateSchedule={handleUpdateSchedule}
+        handleSaveAsNew={handleSaveAsNew}
         setIsAddingJob={setIsAddingJob}
         handleRunSchedule={handleRunSchedule}
         clearAll={clearAll}
-        isJobCreating={isJobCreating}
+        isJobCreating={isScheduleUpdating}
+        isViewingResultMode={isViewingResultMode} // Make sure this is passed to ControlPanel
+        backToEditingMode={backToEditingMode}
       />
 
-      {/* Add Job Modal */}
-      {isAddingJob && (
-        <AddJobModal
-          newJob={newJob}
-          setNewJob={setNewJob}
-          isJobCreating={isJobCreating}
-          addNewJob={addNewJob}
-          setIsAddingJob={setIsAddingJob}
-        />
-      )}
+      {/* Add Job Modal - Ensure this is conditionally rendered/disabled */}
+      {isAddingJob &&
+        !isViewingResultMode && ( // <-- Add !isViewingResultMode here
+          <AddJobModal
+            newJob={newJob}
+            setNewJob={setNewJob}
+            isJobCreating={isScheduleUpdating}
+            addNewJob={addNewJobLogic}
+            setIsAddingJob={setIsAddingJob}
+          />
+        )}
 
       {/* React Flow */}
       <ReactFlow
         nodes={nodes}
         edges={edges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onEdgesDelete={handleEdgesDelete}
-        onConnect={onConnect}
-        onNodeDragStop={handleNodeDragStop}
+        onNodesChange={handleNodesChange}
+        onEdgesChange={handleEdgesChange}
+        onEdgesDelete={onDeleteEdgesLogic}
+        onNodesDelete={onDeleteNodesLogic}
+        onConnect={handleConnectLogic}
+        onNodeDragStop={handleNodeDragStopLogic}
         nodeTypes={nodeTypes}
         fitView
         snapToGrid={true}
@@ -105,10 +167,21 @@ export default function SchedulerFlow() {
           style: { strokeWidth: 2 },
           markerEnd: { type: "arrowclosed" },
         }}
+        // --- CORRECTED CRITICAL CHANGES HERE ---
+        nodesDraggable={!isViewingResultMode && !!currentSchedule}
+        nodesConnectable={!isViewingResultMode && !!currentSchedule}
+        elementsSelectable={!isViewingResultMode && !!currentSchedule}
+        panOnDrag={!isViewingResultMode && !!currentSchedule}
+        zoomOnScroll={true}
+        zoomOnPinch={true}
+        zoomOnDoubleClick={true}
       >
         <Controls />
         <MiniMap
           nodeColor={(node) => {
+            if (node.type === "jobNode" && node.data.nodeColor) {
+              return node.data.nodeColor;
+            }
             if (node.type === "jobNode") return "#3b82f6";
             return "#6b7280";
           }}

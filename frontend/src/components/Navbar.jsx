@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
-import { ClockPlus, Settings, User, LogOut } from "lucide-react";
+import { ClockPlus, Settings, User, LogOut, BookMarked } from "lucide-react";
 const Navbar = () => {
   const { logout, authUser } = useAuthStore();
   return (
@@ -29,6 +29,13 @@ const Navbar = () => {
             >
               <Settings className="w-4 h-4" />
               <span className="hidden sm:inline"> Settings </span>
+            </Link>
+            <Link
+              to={"/history"}
+              className={`btn btn-sm gap-2 transition-colors`}
+            >
+              <BookMarked className="w-4 h-4" />
+              <span className="hidden sm:inline"> History </span>
             </Link>
             {authUser && (
               <>
