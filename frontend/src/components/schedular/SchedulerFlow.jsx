@@ -48,6 +48,7 @@ export default function SchedulerFlow() {
     getTotalProcessingTime,
     handleUpdateJobNodeData,
     handleDeleteJobNode,
+    handleCreateScheduleFromCSV,
   } = useSchedulerLogic({ setNodes, setEdges, nodes, edges });
 
   // Define nodeTypes mapping here, passing custom props to JobNode
@@ -135,6 +136,7 @@ export default function SchedulerFlow() {
         isJobCreating={isScheduleUpdating}
         isViewingResultMode={isViewingResultMode} // Make sure this is passed to ControlPanel
         backToEditingMode={backToEditingMode}
+        handleCreateScheduleFromCSV={handleCreateScheduleFromCSV}
       />
 
       {/* Add Job Modal - Ensure this is conditionally rendered/disabled */}

@@ -428,6 +428,36 @@ export function useSchedulerLogic({ setNodes, setEdges, nodes, edges }) {
       : 0;
   }, [currentSchedule]);
 
+  const handleCreateScheduleFromCSV = async (csvScheduleData) => {
+    if (!csvScheduleData.name.trim()) {
+      throw new Error("Please enter a schedule name");
+    }
+
+    try {
+      setIsCreatingSchedule(true);
+
+      // Creează schedule-ul cu datele din CSV
+      // csvScheduleData conține deja jobs și conflicts în formatul corect pentru schema ta
+      const result = await createSchedule(csvScheduleData);
+
+      // Setează schedule-ul nou ca fiind activ
+      setCurrentSchedule(result);
+
+      console.log("Schedule created successfully from CSV:", {
+        name: result.name,
+        jobsCount: result.jobs.length,
+        conflictsCount: result.conflicts.length,
+      });
+
+      setIsCreatingSchedule(false);
+      return result;
+    } catch (error) {
+      console.error("Failed to create schedule from CSV:", error);
+      setIsCreatingSchedule(false);
+      throw error; // Re-throw pentru a fi prins în ControlPanel
+    }
+  };
+
   return {
     // State
     newJob,
@@ -465,5 +495,6 @@ export function useSchedulerLogic({ setNodes, setEdges, nodes, edges }) {
     backToEditingMode,
     getTotalGain,
     getTotalProcessingTime,
+    handleCreateScheduleFromCSV,
   };
 }
