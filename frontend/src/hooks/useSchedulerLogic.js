@@ -92,7 +92,6 @@ export function useSchedulerLogic({ setNodes, setEdges, nodes, edges }) {
       id: conflict._id,
       source: conflict.job1,
       target: conflict.job2,
-      label: "Conflict",
       style: { stroke: "#ef4444" },
       data: { conflictId: conflict._id },
     }));
@@ -166,7 +165,6 @@ export function useSchedulerLogic({ setNodes, setEdges, nodes, edges }) {
         ...params,
         id: newConflictId,
         data: { conflictId: newConflictId },
-        label: "Conflict",
         style: { stroke: "#ef4444" },
       };
 

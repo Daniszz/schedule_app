@@ -173,7 +173,7 @@ export default function SchedulerFlow() {
         nodesDraggable={!isViewingResultMode && !!currentSchedule}
         nodesConnectable={!isViewingResultMode && !!currentSchedule}
         elementsSelectable={!isViewingResultMode && !!currentSchedule}
-        panOnDrag={!isViewingResultMode && !!currentSchedule}
+        panOnDrag={true}
         zoomOnScroll={true}
         zoomOnPinch={true}
         zoomOnDoubleClick={true}

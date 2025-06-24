@@ -48,7 +48,7 @@ export default function JobNode({ data, id, isViewingResultMode }) {
   };
 
   const handleEdit = () => {
-    if (isViewingResultMode) return; // Still good to have, though button will be hidden
+    if (isViewingResultMode) return;
     setNodes((nodes) =>
       nodes.map((node) =>
         node.id === id
@@ -74,7 +74,7 @@ export default function JobNode({ data, id, isViewingResultMode }) {
   };
 
   const handleDelete = async () => {
-    if (isViewingResultMode) return; // Still good to have, though button will be hidden
+    if (isViewingResultMode) return;
     try {
       const updatedJobs = currentSchedule.jobs.filter(
         (job) => job._id !== data._id
@@ -94,7 +94,7 @@ export default function JobNode({ data, id, isViewingResultMode }) {
     }
   };
 
-  // Restul componentei rămâne la fel...
+  // When in editing mode, display inputs
   if (data.isEditing) {
     return (
       <div className="card bg-base-100 shadow-xl border-2 border-primary p-4 min-w-[200px]">
@@ -153,6 +153,7 @@ export default function JobNode({ data, id, isViewingResultMode }) {
     );
   }
 
+  // When not in editing mode, display job details
   return (
     <div
       className="card shadow-lg hover:shadow-xl transition-all border-2 p-3 min-w-[180px]"
@@ -166,14 +167,13 @@ export default function JobNode({ data, id, isViewingResultMode }) {
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <h3 className="font-semibold text-sm truncate">{data.name}</h3>
-          {/* --- CRITICAL CHANGE: Conditionally render the buttons --- */}
           {!isViewingResultMode && (
             <div className="flex gap-1">
               <button
                 onClick={handleEdit}
                 className="btn btn-ghost btn-xs"
                 style={{ color: data.nodeColor ? "#ffffff" : "#000000" }}
-                disabled={isViewingResultMode} // Still good to have for safety
+                disabled={isViewingResultMode}
               >
                 <Pencil size={16} color="black" />
               </button>
@@ -181,14 +181,16 @@ export default function JobNode({ data, id, isViewingResultMode }) {
                 onClick={handleDelete}
                 className="btn btn-ghost btn-xs text-error"
                 style={{ color: data.nodeColor ? "#ffffff" : "#ef4444" }}
-                disabled={isScheduleCreating || isViewingResultMode} // Still good for safety
+                disabled={isScheduleCreating || isViewingResultMode}
               >
                 {isScheduleCreating ? "..." : <Trash size={16} color="black" />}
               </button>
             </div>
           )}
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
+          {" "}
+          {/* Added flex-wrap for better layout */}
           <div
             className="badge badge-sm"
             style={{
@@ -213,6 +215,24 @@ export default function JobNode({ data, id, isViewingResultMode }) {
           >
             Time: {data.processing_time}
           </div>
+          {/* --- NEW: Display color_map when in result mode --- */}
+          {isViewingResultMode && data.color_map && (
+            <div
+              className="badge badge-info badge-sm" // You can choose a different badge style
+              style={{
+                backgroundColor: data.nodeColor
+                  ? "rgba(255,255,255,0.2)"
+                  : undefined,
+                color: data.nodeColor ? "#ffffff" : undefined,
+                borderColor: data.nodeColor
+                  ? "rgba(255,255,255,0.3)"
+                  : undefined,
+              }}
+            >
+              Color Map: {data.color_map.join(", ")}{" "}
+              {/* Assuming _id is the key */}
+            </div>
+          )}
         </div>
       </div>
       <Handle type="source" position={Position.Bottom} />

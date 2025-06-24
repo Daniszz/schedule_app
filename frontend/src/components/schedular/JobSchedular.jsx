@@ -8,7 +8,7 @@ export default function JobScheduler() {
   return (
     <div className="w-full h-screen bg-base-200 pt-16">
       <ReactFlowProvider>
-        <div className="w-full h-full bg-white">
+        <div className="w-full h-full bg-base-200">
           <SchedulerFlow />
         </div>
       </ReactFlowProvider>

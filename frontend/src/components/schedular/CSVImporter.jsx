@@ -273,8 +273,7 @@ Job B,8,3,,
 Job C,12,1,Job A,
 Job D,5,4,Job E,
 Job E,9,2,,
-Job F,15,6,Job G,
-Job F,15,6,Job H,
+Job F,15,6,Job G,Job H
 Job G,7,3,,
 Job H,11,5,,`;
 
