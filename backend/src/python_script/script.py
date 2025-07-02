@@ -8,7 +8,6 @@ from tabu_search import tabu_search
 from utils import calculate_objectives
 
 def convert_for_json(data):
-    """Converteste set-uri și alte tipuri în structuri serializabile"""
     if isinstance(data, set):
         return list(data)
     elif isinstance(data, dict):
@@ -18,7 +17,6 @@ def convert_for_json(data):
     return data
 
 def evaluate_algorithm(G, p, l, D, gain, algorithm, **kwargs):
-    """Evaluare algoritm care returnează rezultate serializabile"""
     coloring, fully_colored = algorithm(G, p, l, D, gain, **kwargs)
     total_gain, interruptions, color_range = calculate_objectives(G, coloring, gain)
     
@@ -37,7 +35,6 @@ def run_scheduler(input_data):
     p = {}
     gain = {}
     
-    # Construire graf din input
     for job in input_data["jobs"]:
         job_id = job["id"]
         G.add_node(job_id)
@@ -50,19 +47,17 @@ def run_scheduler(input_data):
     l = input_data["l"]
     D = input_data["D"]
     
-    # Rulează toți algoritmii
     results = {
         "greedy": evaluate_algorithm(G, p, l, D, gain, greedy_multicoloring),
         "descent": evaluate_algorithm(G, p, l, D, gain, descent_coloring),
         "tabu": evaluate_algorithm(G, p, l, D, gain, tabu_search,
                                 max_iter=100, tab=10, neighborhood_pct=0.25,
                                 I=150, b_pct=0.2, strategy=2, q=20, gamma=0.2)
+
     }
     
-    # Determină cel mai bun rezultat după total_gain
     best_result = max(results.values(), key=lambda x: x["metrics"]["total_gain"])
     
-    # Pregătește output-ul final
     output = {
         "fully_colored_jobs": best_result["fully_colored"],
         "color_map": best_result["coloring"],

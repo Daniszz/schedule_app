@@ -1,11 +1,6 @@
 import React from "react";
 import { useThemeStore } from "../store/useThemeStore";
 import { THEMES } from "../constants/index.js";
-import { Send } from "lucide-react";
-const PREVIEW_MESSAGES = [
-  { id: 1, content: "Hey! Wanna grab a coffe?", isSent: false },
-  { id: 2, content: "Sure :)", isSent: true },
-];
 
 const SettingsPage = () => {
   const { theme, setTheme } = useThemeStore();

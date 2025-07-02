@@ -51,7 +51,6 @@ export default function SchedulerFlow() {
     handleCreateScheduleFromCSV,
   } = useSchedulerLogic({ setNodes, setEdges, nodes, edges });
 
-  // Define nodeTypes mapping here, passing custom props to JobNode
   const nodeTypes = React.useMemo(
     () => ({
       jobNode: (nodeProps) => (
@@ -60,7 +59,7 @@ export default function SchedulerFlow() {
           onUpdateJob={handleUpdateJobNodeData}
           onDeleteJob={handleDeleteJobNode}
           isScheduleUpdating={isScheduleUpdating}
-          isViewingResultMode={isViewingResultMode} // Ensure this is passed
+          isViewingResultMode={isViewingResultMode}
         />
       ),
     }),
@@ -68,25 +67,17 @@ export default function SchedulerFlow() {
       handleUpdateJobNodeData,
       handleDeleteJobNode,
       isScheduleUpdating,
-      isViewingResultMode, // Important: re-memoize if this changes
+      isViewingResultMode,
     ]
   );
-
-  // --- React Flow Callback Wrappers ---
-  // These wrappers apply changes to React Flow's internal state (via onNodesChange/onEdgesChange)
-  // but only if not in result viewing mode and a schedule is selected.
-  // The logic in useSchedulerLogic then manages *persisting* these changes.
 
   const handleNodesChange = useCallback(
     (changes) => {
       if (!isViewingResultMode && currentSchedule) {
-        onNodesChange(changes); // Apply changes to React Flow's internal state
+        onNodesChange(changes);
       } else if (!currentSchedule) {
         console.warn("Cannot change nodes: No schedule selected.");
       } else {
-        // No need to log this if interactive={false} is set globally,
-        // as the user won't be able to initiate these changes.
-        // console.warn("Cannot change nodes in result viewing mode.");
       }
     },
     [onNodesChange, isViewingResultMode, currentSchedule]
@@ -95,18 +86,15 @@ export default function SchedulerFlow() {
   const handleEdgesChange = useCallback(
     (changes) => {
       if (!isViewingResultMode && currentSchedule) {
-        onEdgesChange(changes); // Apply changes to React Flow's internal state
+        onEdgesChange(changes);
       } else if (!currentSchedule) {
         console.warn("Cannot change edges: No schedule selected.");
       } else {
-        // No need to log this if interactive={false} is set globally.
-        // console.warn("Cannot change edges in result viewing mode.");
       }
     },
     [onEdgesChange, isViewingResultMode, currentSchedule]
   );
 
-  // Consolidated loading check for the entire component
   if (isScheduleUpdating || isCreatingSchedule || isScheduleRunning) {
     return <LoadingSpinner />;
   }
@@ -134,22 +122,20 @@ export default function SchedulerFlow() {
         handleRunSchedule={handleRunSchedule}
         clearAll={clearAll}
         isJobCreating={isScheduleUpdating}
-        isViewingResultMode={isViewingResultMode} // Make sure this is passed to ControlPanel
+        isViewingResultMode={isViewingResultMode}
         backToEditingMode={backToEditingMode}
         handleCreateScheduleFromCSV={handleCreateScheduleFromCSV}
       />
 
-      {/* Add Job Modal - Ensure this is conditionally rendered/disabled */}
-      {isAddingJob &&
-        !isViewingResultMode && ( // <-- Add !isViewingResultMode here
-          <AddJobModal
-            newJob={newJob}
-            setNewJob={setNewJob}
-            isJobCreating={isScheduleUpdating}
-            addNewJob={addNewJobLogic}
-            setIsAddingJob={setIsAddingJob}
-          />
-        )}
+      {isAddingJob && !isViewingResultMode && (
+        <AddJobModal
+          newJob={newJob}
+          setNewJob={setNewJob}
+          isJobCreating={isScheduleUpdating}
+          addNewJob={addNewJobLogic}
+          setIsAddingJob={setIsAddingJob}
+        />
+      )}
 
       {/* React Flow */}
       <ReactFlow
@@ -169,7 +155,6 @@ export default function SchedulerFlow() {
           style: { strokeWidth: 2 },
           markerEnd: { type: "arrowclosed" },
         }}
-        // --- CORRECTED CRITICAL CHANGES HERE ---
         nodesDraggable={!isViewingResultMode && !!currentSchedule}
         nodesConnectable={!isViewingResultMode && !!currentSchedule}
         elementsSelectable={!isViewingResultMode && !!currentSchedule}

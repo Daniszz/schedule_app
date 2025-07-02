@@ -40,7 +40,6 @@ export default function ControlPanel({
   const [activeTab, setActiveTab] = useState("setup");
   const [isCollapsed, setIsCollapsed] = useState(false);
 
-  // Effect to force "Setup" tab if no current schedule and not viewing results
   useEffect(() => {
     if (!currentSchedule && !isViewingResultMode && activeTab === "execution") {
       setActiveTab("setup");

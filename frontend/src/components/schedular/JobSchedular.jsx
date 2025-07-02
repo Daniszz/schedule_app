@@ -1,4 +1,3 @@
-// src/components/scheduler/JobScheduler.jsx
 import React from "react";
 import { ReactFlowProvider } from "reactflow";
 import "reactflow/dist/style.css";

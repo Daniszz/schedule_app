@@ -19,10 +19,9 @@ export default function ExecutionTab({
         return;
       }
 
-      // Stiluri îmbunătățite pentru noduri
       const style = document.createElement("style");
       style.innerHTML = `
-        /* Stiluri pentru nodurile React Flow în snapshot */
+        /* Stiluri pentru nodurile React Flow in snapshot */
         .react-flow__node {
           overflow: visible !important;
           white-space: normal !important;
@@ -105,7 +104,6 @@ export default function ExecutionTab({
 
       document.head.appendChild(style);
 
-      // Capturăm doar flow-ul
       const flowDataUrl = await toPng(flowElement, {
         quality: 1,
         pixelRatio: 2,
@@ -118,38 +116,30 @@ export default function ExecutionTab({
         },
       });
 
-      // Curățăm stilul temporar
       document.head.removeChild(style);
 
-      // Dacă suntem în modul de vizualizare rezultate, creăm canvas combinat
       if (currentResult && isViewingResultMode) {
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
 
-        // Încărcăm imaginea flow-ului
         const flowImg = new Image();
         await new Promise((resolve) => {
           flowImg.onload = resolve;
           flowImg.src = flowDataUrl;
         });
 
-        // Calculăm dimensiunile pentru canvas
         const padding = 40;
         const tableHeight = 200;
         canvas.width = Math.max(flowImg.width + padding * 2, 800);
         canvas.height = flowImg.height + tableHeight + padding * 3;
 
-        // Fundal alb
         ctx.fillStyle = "#ffffff";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // Desenăm flow-ul
         ctx.drawImage(flowImg, padding, padding);
 
-        // Desenăm tabelul cu rezultate
         const tableY = flowImg.height + padding * 2;
 
-        // Fundal tabel
         ctx.fillStyle = "#f8fafc";
         ctx.fillRect(
           padding,
@@ -158,7 +148,6 @@ export default function ExecutionTab({
           tableHeight - padding
         );
 
-        // Border tabel
         ctx.strokeStyle = "#e2e8f0";
         ctx.lineWidth = 2;
         ctx.strokeRect(
@@ -168,20 +157,17 @@ export default function ExecutionTab({
           tableHeight - padding
         );
 
-        // Text pentru tabel
         const coloredJobs = currentResult?.fully_colored_jobs?.length || 0;
         const totalJobs = jobs.length;
 
-        // Titlu
         ctx.fillStyle = "#1e293b";
         ctx.font = "bold 18px Arial";
         ctx.fillText("Rezultate Algoritm", padding + 20, tableY + 30);
 
-        // Timestamp
         ctx.fillStyle = "#64748b";
         ctx.font = "12px Arial";
         const timestamp = new Date(currentResult.timestamp).toLocaleString(
-          "ro-RO"
+          "en-EN"
         );
         ctx.fillText(
           timestamp,
@@ -189,7 +175,6 @@ export default function ExecutionTab({
           tableY + 30
         );
 
-        // Datele în coloane
         const startX = padding + 20;
         const startY = tableY + 60;
         const colWidth = (canvas.width - padding * 2 - 40) / 5;
@@ -201,7 +186,7 @@ export default function ExecutionTab({
             color: "#3b82f6",
           },
           {
-            label: "Joburi Colorate",
+            label: "Colored jobs",
             value: `${coloredJobs}/${totalJobs}`,
             color: "#10b981",
           },
@@ -234,30 +219,24 @@ export default function ExecutionTab({
         data.forEach((item, index) => {
           const x = startX + index * colWidth;
 
-          // Background pentru fiecare item
           ctx.fillStyle = "#ffffff";
           ctx.fillRect(x, startY, colWidth - 10, 80);
 
-          // Border colorat
           ctx.fillStyle = item.color;
           ctx.fillRect(x, startY, 4, 80);
 
-          // Label
           ctx.fillStyle = "#64748b";
           ctx.font = "12px Arial";
           ctx.fillText(item.label, x + 12, startY + 20);
 
-          // Value
           ctx.fillStyle = "#1e293b";
           ctx.font = "bold 16px Arial";
           const value = item.value.toString();
           ctx.fillText(value, x + 12, startY + 45);
         });
 
-        // Convertim canvas-ul la PNG
         const combinedDataUrl = canvas.toDataURL("image/png");
 
-        // Descărcăm imaginea combinată
         const link = document.createElement("a");
         const timestamp_file = new Date()
           .toISOString()
@@ -267,7 +246,6 @@ export default function ExecutionTab({
         link.href = combinedDataUrl;
         link.click();
       } else {
-        // Dacă nu suntem în modul rezultate, doar descărcăm flow-ul
         const link = document.createElement("a");
         const timestamp = new Date()
           .toISOString()

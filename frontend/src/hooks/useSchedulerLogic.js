@@ -8,7 +8,6 @@ import { useScheduleResultStore } from "../store/useScheduleResultStore";
 import { v4 as uuidv4 } from "uuid";
 
 export function useSchedulerLogic({ setNodes, setEdges, nodes, edges }) {
-  // ... (restul state-ului tău, nicio modificare aici)
   const [newJob, setNewJob] = useState({
     name: "",
     gain: 0,
@@ -23,7 +22,6 @@ export function useSchedulerLogic({ setNodes, setEdges, nodes, edges }) {
   const [isCreatingSchedule, setIsCreatingSchedule] = useState(false);
   const [isViewingResultMode, setIsViewingResultMode] = useState(false);
 
-  // Zustand store hooks -
   const { isJobCreating, isJobLoading } = useJobStore();
 
   const {} = useConflictStore();
@@ -47,14 +45,11 @@ export function useSchedulerLogic({ setNodes, setEdges, nodes, edges }) {
     setCurrentResult,
   } = useScheduleResultStore();
 
-  // Load data on mount (doar schedules și rezultate)
   useEffect(() => {
     fetchSchedules();
     fetchResults();
   }, [fetchSchedules, fetchResults]);
 
-  // Update nodes and edges when currentSchedule or currentResult change
-  // This useEffect is crucial for loading initial state and after explicit saves
   useEffect(() => {
     if (!currentSchedule) {
       setNodes([]);
@@ -98,7 +93,6 @@ export function useSchedulerLogic({ setNodes, setEdges, nodes, edges }) {
     setEdges(newEdges);
   }, [currentSchedule, currentResult, isViewingResultMode, setNodes, setEdges]);
 
-  // Update scheduleParams when currentSchedule changes
   useEffect(() => {
     if (currentSchedule) {
       setScheduleParams({
@@ -111,7 +105,6 @@ export function useSchedulerLogic({ setNodes, setEdges, nodes, edges }) {
     }
   }, [currentSchedule]);
 
-  // NEW: Function to commit (save) current React Flow state to the backend
   const commitScheduleChanges = useCallback(
     async (params) => {
       if (!currentSchedule) {
@@ -148,7 +141,7 @@ export function useSchedulerLogic({ setNodes, setEdges, nodes, edges }) {
         console.error("Failed to save current schedule state:", error);
       }
     },
-    [currentSchedule, updateSchedule, setCurrentSchedule, nodes, edges] // Dependencies: nodes and edges are crucial here
+    [currentSchedule, updateSchedule, setCurrentSchedule, nodes, edges]
   );
 
   const onConnect = useCallback(
@@ -168,8 +161,7 @@ export function useSchedulerLogic({ setNodes, setEdges, nodes, edges }) {
         style: { stroke: "#ef4444" },
       };
 
-      setEdges((eds) => addEdge(newEdge, eds)); // Update React Flow's local state
-      // IMPORTANT: No call to commitScheduleChanges here
+      setEdges((eds) => addEdge(newEdge, eds));
     },
     [isViewingResultMode, currentSchedule, setEdges]
   );
@@ -183,13 +175,11 @@ export function useSchedulerLogic({ setNodes, setEdges, nodes, edges }) {
         return;
       }
 
-      // Update React Flow's local state
       setNodes((nds) =>
         nds.map((n) =>
           n.id === node.id ? { ...n, position: node.position } : n
         )
       );
-      // IMPORTANT: No call to commitScheduleChanges here
     },
     [isViewingResultMode, currentSchedule, setNodes]
   );
@@ -207,7 +197,7 @@ export function useSchedulerLogic({ setNodes, setEdges, nodes, edges }) {
 
     try {
       const jobToAdd = {
-        _id: uuidv4(), // Generate temporary ID for immediate display
+        _id: uuidv4(),
         name: newJob.name,
         gain: newJob.gain,
         processing_time: newJob.processing_time,
@@ -227,8 +217,7 @@ export function useSchedulerLogic({ setNodes, setEdges, nodes, edges }) {
         },
       };
 
-      setNodes((nds) => [...nds, newReactFlowJobNode]); // Update React Flow's local state
-      // IMPORTANT: No call to commitScheduleChanges here
+      setNodes((nds) => [...nds, newReactFlowJobNode]);
 
       setNewJob({ name: "", gain: 0, processing_time: 1 });
       setIsAddingJob(false);
@@ -262,13 +251,11 @@ export function useSchedulerLogic({ setNodes, setEdges, nodes, edges }) {
     }
   };
 
-  // This is the primary save action now
   const handleUpdateSchedule = async () => {
     if (!currentSchedule) {
       console.error("No schedule selected to update");
       return;
     }
-    // Now, explicitly commit the current state of nodes and edges from React Flow to the backend
     await commitScheduleChanges(scheduleParams);
     console.log("Schedule updated successfully");
   };
@@ -367,14 +354,12 @@ export function useSchedulerLogic({ setNodes, setEdges, nodes, edges }) {
         return;
       }
 
-      // Filter out the deleted edges from React Flow's state
       setEdges((eds) =>
         eds.filter(
           (edge) =>
             !edgesToDelete.some((deletedEdge) => deletedEdge.id === edge.id)
         )
       );
-      // IMPORTANT: No call to commitScheduleChanges here
     },
     [isViewingResultMode, currentSchedule, setEdges]
   );
@@ -388,7 +373,6 @@ export function useSchedulerLogic({ setNodes, setEdges, nodes, edges }) {
         return;
       }
 
-      // Filter out the deleted nodes from React Flow's state
       setNodes((nds) =>
         nds.filter(
           (node) =>
@@ -396,7 +380,6 @@ export function useSchedulerLogic({ setNodes, setEdges, nodes, edges }) {
         )
       );
 
-      // Filter out edges connected to deleted nodes from React Flow's state
       setEdges((eds) =>
         eds.filter(
           (edge) =>
@@ -406,7 +389,6 @@ export function useSchedulerLogic({ setNodes, setEdges, nodes, edges }) {
             )
         )
       );
-      // IMPORTANT: No call to commitScheduleChanges here
     },
     [isViewingResultMode, currentSchedule, setNodes, setEdges]
   );
@@ -434,11 +416,8 @@ export function useSchedulerLogic({ setNodes, setEdges, nodes, edges }) {
     try {
       setIsCreatingSchedule(true);
 
-      // Creează schedule-ul cu datele din CSV
-      // csvScheduleData conține deja jobs și conflicts în formatul corect pentru schema ta
       const result = await createSchedule(csvScheduleData);
 
-      // Setează schedule-ul nou ca fiind activ
       setCurrentSchedule(result);
 
       console.log("Schedule created successfully from CSV:", {
@@ -452,7 +431,7 @@ export function useSchedulerLogic({ setNodes, setEdges, nodes, edges }) {
     } catch (error) {
       console.error("Failed to create schedule from CSV:", error);
       setIsCreatingSchedule(false);
-      throw error; // Re-throw pentru a fi prins în ControlPanel
+      throw error;
     }
   };
 
@@ -484,7 +463,7 @@ export function useSchedulerLogic({ setNodes, setEdges, nodes, edges }) {
     addNewJob,
     handleNodeDragStop,
     handleCreateSchedule,
-    handleUpdateSchedule, // This is now the explicit save for current schedule
+    handleUpdateSchedule,
     handleSaveAsNew,
     handleRunSchedule,
     handleEdgesDelete,

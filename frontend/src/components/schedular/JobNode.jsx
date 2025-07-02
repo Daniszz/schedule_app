@@ -94,7 +94,6 @@ export default function JobNode({ data, id, isViewingResultMode }) {
     }
   };
 
-  // When in editing mode, display inputs
   if (data.isEditing) {
     return (
       <div className="card bg-base-100 shadow-xl border-2 border-primary p-4 min-w-[200px]">
@@ -153,7 +152,6 @@ export default function JobNode({ data, id, isViewingResultMode }) {
     );
   }
 
-  // When not in editing mode, display job details
   return (
     <div
       className="card shadow-lg hover:shadow-xl transition-all border-2 p-3 min-w-[180px]"
@@ -215,22 +213,20 @@ export default function JobNode({ data, id, isViewingResultMode }) {
           >
             Time: {data.processing_time}
           </div>
-          {/* --- NEW: Display color_map when in result mode --- */}
           {isViewingResultMode && data.color_map && (
             <div
-              className="badge badge-info badge-sm" // You can choose a different badge style
+              className="badge badge-info badge-sm"
               style={{
                 backgroundColor: data.nodeColor
                   ? "rgba(255, 255, 255, 0.2)"
-                  : "#ffffff", // Fundal alb când nu există nodeColor
-                color: data.nodeColor ? "#ffffff" : "#000000", // Text negru pe fundal alb
+                  : "#ffffff",
+                color: data.nodeColor ? "#ffffff" : "#000000",
                 borderColor: data.nodeColor
                   ? "rgba(255, 255, 255, 0.3)"
                   : "#000000",
               }}
             >
               Colors: {data.color_map.join(", ")}{" "}
-              {/* Assuming _id is the key */}
             </div>
           )}
         </div>

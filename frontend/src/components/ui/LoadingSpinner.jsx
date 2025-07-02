@@ -1,4 +1,3 @@
-// src/components/ui/LoadingSpinner.jsx
 import React from "react";
 
 export default function LoadingSpinner() {

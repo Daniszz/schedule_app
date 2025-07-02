@@ -8,28 +8,26 @@ export const useScheduleStore = create((set, get) => ({
   schedules: [],
   currentSchedule: null,
 
-  // Funcție utilitară pentru a verifica unicitatea numelor joburilor
   _checkJobNameUniqueness: (jobs) => {
     if (!jobs || jobs.length === 0) {
-      return true; // Nu sunt joburi, deci nu pot exista duplicate
+      return true;
     }
     const jobNames = new Set();
     for (const job of jobs) {
       if (jobNames.has(job.name)) {
-        return false; // Nume duplicat găsit
+        return false;
       }
       jobNames.add(job.name);
     }
-    return true; // Toate numele sunt unice
+    return true;
   },
 
   createSchedule: async (data) => {
     set({ isScheduleCreating: true });
     try {
-      // Verificarea unicității numelor joburilor înainte de a trimite
       if (data.jobs && !get()._checkJobNameUniqueness(data.jobs)) {
         toast.error("Job names must be unique within a schedule.");
-        return; // Oprim execuția dacă există nume duplicate
+        return;
       }
 
       const res = await axiosInstance.post("/schedule", data);
