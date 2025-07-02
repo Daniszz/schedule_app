@@ -71,7 +71,7 @@ const HistoryPage = () => {
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString("ro-RO", {
+    return date.toLocaleDateString("en-EN", {
       year: "numeric",
       month: "long",
       day: "numeric",
@@ -143,11 +143,11 @@ const HistoryPage = () => {
                         : "undefined"}
                     </div>
                     <div>
-                      <span className="font-medium">L (Length):</span>{" "}
+                      <span className="font-medium">Shared resources:</span>{" "}
                       {schedule.l}
                     </div>
                     <div>
-                      <span className="font-medium">D (Days):</span>{" "}
+                      <span className="font-medium">Deadline:</span>{" "}
                       {schedule.D}
                     </div>
                   </div>

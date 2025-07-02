@@ -178,16 +178,34 @@ export default function SchedulerFlow() {
         zoomOnPinch={true}
         zoomOnDoubleClick={true}
       >
-        <Controls />
-        <MiniMap
-          nodeColor={(node) => {
-            if (node.type === "jobNode" && node.data.nodeColor) {
-              return node.data.nodeColor;
-            }
-            if (node.type === "jobNode") return "#3b82f6";
-            return "#6b7280";
-          }}
-        />
+        <div className="absolute  bottom-2 z-10" style={{ right: "160px" }}>
+          <Controls
+            className="!relative"
+            style={{
+              height: 100,
+              display: "flex",
+              flexDirection: "column",
+              gap: "4px",
+            }}
+          />
+        </div>
+        <div className="absolute right-1 bottom-2 z-10">
+          <MiniMap
+            nodeColor={(node) => {
+              if (node.type === "jobNode" && node.data.nodeColor) {
+                return node.data.nodeColor;
+              }
+              if (node.type === "jobNode") return "#3b82f6";
+              return "#6b7280";
+            }}
+            style={{
+              width: 140,
+              height: 100,
+              borderRadius: "4px",
+              border: "1px solid #e2e8f0",
+            }}
+          />
+        </div>
         <Background variant="dots" gap={12} size={1} />
       </ReactFlow>
     </div>

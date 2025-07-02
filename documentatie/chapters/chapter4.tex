@@ -1,10 +1,10 @@
 \chapter{Experimente și rezultate}
 
 \section{Măsurători și metrici}
-Inițial vom discuta despre cum arată instanțele de test in ceea ce privește parametri de bază ai algoritmilor: graful $G=(V,E)$, vectorul de culori $p$, numărul total de unități de timp/culori $D$, limita numărului de unități de resurse partajate/culori $l$ și vectorul de câștig $g$. Pentru generarea grafului se folosesc doi parametri: numărul n de vârfuri și o densitate a grafului d (probabilitate de avea o muchie între două noduri). Am considerat $n \in \{30,150,300\}$ și $d \in \{0.2, 0.5, 0.8\}$. Pentru fiecare combinație (n,d) sunt generate câte 10 instanțe. Numărul de culori $p_i$ a unui vârf $i$ este un număr întreg pozitiv ales aleatoriu în intervalul $[1,10]$. Pentru a simula scenariile reale unde câștigul este în strânsă legătură cu timpul de procesare ($p_i$), cu cât e un timp de procesare mai mare cu atât și câștigul este mai mare. Prin urmare $g_i = \beta \cdot p_i$, unde $\beta$ este ales aleatoriu în intervalul $[1,20]$. Limita de resurse $l$ este setată la 25.
+Inițial, vom discuta despre cum arată instanțele de test in ceea ce privește parametri de bază ai algoritmilor: graful $G=(V,E)$, vectorul de culori $p$, numărul total de unități de timp/culori $D$, limita numărului de unități de resurse partajate/culori $l$ și vectorul de câștig $g$. Pentru generarea grafului se folosesc doi parametri: numărul n de vârfuri și o densitate a grafului d (probabilitate de avea o muchie între două noduri), conform modelului Erdős-Rényi (\cite{erdos1959random}).  Am considerat $n \in \{30,150,300\}$ și $d \in \{0.2, 0.5, 0.8\}$. Pentru fiecare combinație (n,d) sunt generate câte 10 instanțe. Numărul de culori $p_i$ a unui vârf $i$ este un număr întreg pozitiv ales aleatoriu în intervalul $[1,10]$. Pentru a simula scenariile reale unde câștigul este în strânsă legătură cu timpul de procesare ($p_i$), cu cât e un timp de procesare mai mare cu atât și câștigul este mai mare. Prin urmare $g_i = \beta \cdot p_i$, unde $\beta$ este ales aleatoriu în intervalul $[1,20]$. Limita de resurse $l$ este setată la 25.
 
 În privința lui $D$ (numărul total de culori) am dori să aibă o valoarea ce nu permite colorarea completă pentru a vedea comportamentul algoritmilor cât mai bine.
-Pentru a determina o valoare potrivită a lui $D$, a fost creat un script care, pentru fiecare combinație $(n, d)$, generează 100 de instanțe folosind algoritmul Greedy~\ref{alg:greedy_multicoloring}. Pentru fiecare $D$, se calculează procentul mediu de colorare, precum și intervalul [min, max] al procentelor de colorare obținute. Valoarea aleasă pentru testare este cel mai mare $D$ care nu a permis atingerea unui grad de colorare de $100\%$ în niciuna dintre instanțe. 
+Pentru a determina o valoare potrivită a lui $D$, a fost creat un script care, pentru fiecare combinație $(n, d)$, generează 100 de instanțe folosind algoritmul Greedy (~\ref{alg:greedy_multicoloring}). Pentru fiecare $D$, se calculează procentul mediu de colorare, precum și intervalul [min, max] al procentelor de colorare obținute. Valoarea aleasă pentru testare este cel mai mare $D$ care nu a permis atingerea unui grad de colorare de $100\%$ în niciuna dintre instanțe. 
 
 \begin{table}[H]
 \centering
@@ -38,105 +38,125 @@ Algoritmii supuși instanțelor de test implică, pe lângă parametrii de bază
     \item dimensiunea numărului de mutări interzise ($tab$): setată la 3 pentru $n = 30$ și la 10 pentru $n \in \{150, 300\}$;
     \item Parametrul de diversificare $/$ procentul de decoloare ($b$): 20\%;
     \item numărul maxim de iterații fără îmbunătățire ($I_{\max}$): 150;
-    \item numărul de noduri selectate pentru $R^{Exact}$ ($q$): 20;
-    \item procentajul de vârfuri utilizat în generarea vecinătății~\ref{alg:generator}: 25\%;
-    \item Probabilitate aplicări $R^{SD}$ în cadrul celei de a doua strategii ($\gamma$): 0{,}2.
+    \item numărul de noduri selectate pentru $Recolorare^{Exact}$ ($q$): 20;
+    \item procentajul de vârfuri utilizat în generarea vecinătății (vezi~\ref{alg:generator}): 25\%;
+    \item Probabilitate aplicări $Recolorare^{SD}$ în cadrul celei de a doua strategii ($\gamma$): 0{,}2.
   \end{itemize}
   Valorile acestor parametri au fost determinate în urma unei etape de ajustare, bazată pe rulări preliminare ale algoritmului pe un set reprezentativ de instanțe.
 \end{enumerate}
 
 
-Pentru rularea scripturilor, a fost utilizată o mașină virtuală prin intermediul serviciului \textit{Google Cloud}, de tip \textit{e2-highcpu-16} (16 vCPUs, 16 GB RAM). Alegerea acestui tip de instanță a fost determinată de necesitatea unei puteri de procesare ridicate și a unui număr mare de nuclee, având în vedere că scriptul lansează în paralel cele 10 instanțe de test, fiecare rulând un algoritm complex, ceea ce presupune o utilizare intensivă a resurselor CPU.
+Pentru rularea scripturilor, a fost utilizată o mașină virtuală prin intermediul serviciului \textit{Google Cloud}, de tip \textit{e2-highcpu-16} (16 vCPUs, 16 GB RAM). Alegerea acestui tip de instanță a fost determinată de necesitatea unei puteri de procesare ridicate și a unui număr mare de nuclee, având în vedere că scriptul lansează în paralel cele 10 instanțe de test, fiecare rulând un algoritm complex, ceea ce presupune o utilizare intensivă a resurselor CPU.\
 
-Instanțele de test vor fi încadrate in 3 tabele distincte, grupate în funcție de  numărul de vârfuri $n$ astfel încât să se evidențieze comportamentul algoritmilor în cadrul instanțelor de dimensiuni reduse,medii și mari. Pentru fiecare combinație $(n,d)$ și pentru fiecare algoritm analizat: Greedy, Descent, TS1(Tabu Search cu strategia 1), TS2(Tabu Search cu strategia 2) sunt acordate două coloane: o coloană cu cel mai bun rezultat și o coloană cu rezultatul mediu din cele 10 instanțe. Rezultatele o să fie de forma unui triplet (scor obiectiv f1,scor obiectiv f2,scor obiectiv f3) însoțit de raportul dintre numărul de vârfuri colorate și numărul total de vârfuri.
-
+Instanțele de test vor fi încadrate in 3 tabele distincte, grupate în funcție de  numă- rul de vârfuri $n$ astfel încât să se evidențieze comportamentul algoritmilor în cadrul instanțelor de dimensiuni reduse, medii și mari. Pentru fiecare combinație $(n,d)$ și pentru fiecare algoritm analizat: Greedy, Descent, TS1(Tabu Search cu strategia 1), TS2(Tabu Search cu strategia 2) sunt acordate două coloane: o coloană cu cel mai bun rezultat și o coloană cu rezultatul mediu din cele 10 instanțe. Rezultatele o să fie de forma unui triplet (scor obiectiv $f_1$,scor obiectiv $f_2$,scor obiectiv $f_3$) însoțit de raportul dintre numărul de vârfuri colorate și numărul total de vârfuri.
 
 \begin{table}[H]
 \centering
 \caption{Rezultate pentru $n = 30$}
-\begin{tabular}{ccll}
+\scriptsize
+\begin{tabular}{cc  cc  cc}
 \toprule
-$d$ & Algoritm & Cel mai bun rezultat  & Media rezultatelor \\
+$d$ & Algoritm 
+    & \multicolumn{2}{c}{Cea mai bună rulare} 
+    & \multicolumn{2}{c}{Medie} \\
+\cmidrule(r){3-4} \cmidrule(l){5-6}
+& 
+& $(f_1, f_2, f_3)$ & Nr.\ noduri colorate 
+& $(\overline{f_1}, \overline{f_2}, \overline{f_3})$ & Nr.\ noduri colorate \\
 \midrule
 \multirow{4}{*}{0.2}
-  & Greedy  & (1747, 5, 185), 22/30 & (1623.10, 2.70, 148.40), 20.8/30 \\
-  & Descent & (1808,30,313), 25/30   & (1762.10, 30.90, 296.90), 24/30 \\
-  & TS1     & (1808,22,243), 25/30    & (1771.40, 18.80, 242.00), 23.6/30 \\
-  & TS2     & (1808,58,332), 25/30    & (1782.70,40.40,297.00), 23.6/30 \\
+  & Greedy  & (1747, 5, 185)   & 22/30  & (1623.10, 2.70, 148.40)   & 20.8/30 \\
+  & Descent & (1808, 30, 313)  & 25/30  & (1762.10, 30.90, 296.90)  & 24/30 \\
+  & TS1     & (1808, 22, 243)  & 25/30  & (1771.40, 18.80, 242.00)  & 23.6/30 \\
+  & TS2     & (1808, 58, 332)  & 25/30  & (1782.70, 40.40, 297.00)  & 23.6/30 \\
 \midrule
 \multirow{4}{*}{0.5}
-  & Greedy  & (1614,7,170), 26/30     & (1555.30, 5.60, 169.30), 24.89/30 \\
-  & Descent & (1704,40,464), 29/30    & (1671.50, 26.60, 365.70), 28/30 \\
-  & TS1     & (1704,31,384), 29/30    & (1684.60, 30.30, 378.00),
-  27.7/30 \\
-  & TS2     & (1704,32,409), 29/30    & (1669.70,53.30,492.70), 28.7/30 \\
+  & Greedy  & (1614, 7, 170)   & 26/30  & (1555.30, 5.60, 169.30)   & 24.89/30 \\
+  & Descent & (1704, 40, 464)  & 29/30  & (1671.50, 26.60, 365.70)  & 28/30 \\
+  & TS1     & (1704, 31, 384)  & 29/30  & (1684.60, 30.30, 378.00)  & 27.7/30 \\
+  & TS2     & (1704, 32, 409)  & 29/30  & (1669.70, 53.30, 492.70)  & 28.7/30 \\
 \midrule
 \multirow{4}{*}{0.8}
-  & Greedy  & (1617,7,169), 27/30     & (1588.70, 6.10, 198.80), 26.4/30 \\
-  & Descent & (1644,43,749), 28/30    & (1631.40, 42.00, 699.20), 28/30 \\
-  & TS1     & (1688,35,620) 29/30     &  (1646.30, 26.20, 473.10), 28/30 \\
-  & TS2     &  (1644,38,556) 28/30    &  (1644.00, 43.80, 608.40), 28.1/30 \\
+  & Greedy  & (1617, 7, 169)   & 27/30  & (1588.70, 6.10, 198.80)   & 26.4/30 \\
+  & Descent & (1644, 43, 749)  & 28/30  & (1631.40, 42.00, 699.20)  & 28/30 \\
+  & TS1     & (1688, 35, 620)  & 29/30  & (1646.30, 26.20, 473.10)  & 28/30 \\
+  & TS2     & (1644, 38, 556)  & 28/30  & (1644.00, 43.80, 608.40)  & 28.1/30 \\
 \bottomrule
 \end{tabular}\label{tab:rezultate_n30}
 \end{table}
 
-
 \begin{table}[H]
 \centering
 \caption{Rezultate pentru $n = 150$}
-\begin{tabular}{ccll}
+\scriptsize
+\begin{tabular}{cc  cc  cc}
 \toprule
-$d$ & Algoritm & Cel mai bun rezultat  & Media rezultatelor \\
+$d$ & Algoritm 
+    & \multicolumn{2}{c}{Cea mai bună rulare} 
+    & \multicolumn{2}{c}{Medie} \\
+\cmidrule(r){3-4} \cmidrule(l){5-6}
+& 
+& $(f_1, f_2, f_3)$ & Nr.\ noduri colorate 
+& $(\overline{f_1}, \overline{f_2}, \overline{f_3})$ & Nr.\ noduri colorate \\
 \midrule
 \multirow{4}{*}{0.2}
-  & Greedy  & (8075, 17, 736), 138/150 & (7994.20, 25.40, 882.40), 134.7/150 \\
-  & Descent & (8358,193,3259), 148/150   & (8335.20, 240.10, 3330.10), 148.5/150 \\
-  & TS1     & (8364,77,1421), 149/150    & (8326.80, 64.40, 1298.60), 147/150 \\
-  & TS2     & (8364,68,1537), 149/150    & (8341.70 ,68.50,1393.00), 148/150 \\
+  & Greedy  & (8075, 17, 736)    & 138/150 & (7994.20, 25.40, 882.40)   & 134.7/150 \\
+  & Descent & (8358, 193, 3259)  & 148/150 & (8335.20, 240.10, 3330.10) & 148.5/150 \\
+  & TS1     & (8364, 77, 1421)   & 149/150 & (8326.80, 64.40, 1298.60)  & 147/150 \\
+  & TS2     & (8364, 68, 1537)   & 149/150 & (8341.70, 68.50, 1393.00)  & 148/150 \\
 \midrule
 \multirow{4}{*}{0.5}
-  & Greedy  & (8517,53,1903), 129/150     & (8253.50, 43.70, 1608.70), 124.6/150 \\
-  & Descent & (8862,296,7593), 147/150    & (8807.70, 284.40, 7148.60), 145.9/150 \\
-  & TS1     & (8862,130,3335), 147/150    & (8802.50, 133.00, 3350.20), 144.9/150 \\
-  & TS2     & (8891,172,4249), 148/150    & (8829.20,155.50,3720.80), 145.4/150 \\
+  & Greedy  & (8517, 53, 1903)   & 129/150 & (8253.50, 43.70, 1608.70)  & 124.6/150 \\
+  & Descent & (8862, 296, 7593)  & 147/150 & (8807.70, 284.40, 7148.60) & 145.9/150 \\
+  & TS1     & (8862, 130, 3335)  & 147/150 & (8802.50, 133.00, 3350.20) & 144.9/150 \\
+  & TS2     & (8891, 172, 4249)  & 148/150 & (8829.20, 155.50, 3720.80) & 145.4/150 \\
 \midrule
 \multirow{4}{*}{0.8}
-  & Greedy  & (7655,42,2247), 131/150     & (7579.80, 41.80, 1904.30), 126.8/150 \\
-  & Descent & (7992,280,11956), 149/150    & (7964.10, 250.90, 11422.90), 147.8/150 \\
-  & TS1     & (7985,150,5995) 148/150     &  (7953.90, 144.50, 5258.40), 146.7/150 \\
-  & TS2     &  (8006,212,7657) 150/150    &  (7991.30, 188.10, 6812.80), 148.5/30 \\
+  & Greedy  & (7655, 42, 2247)   & 131/150 & (7579.80, 41.80, 1904.30)  & 126.8/150 \\
+  & Descent & (7992, 280, 11956) & 149/150 & (7964.10, 250.90, 11422.90)& 147.8/150 \\
+  & TS1     & (7985, 150, 5995)  & 148/150 & (7953.90, 144.50, 5258.40) & 146.7/150 \\
+  & TS2     & (8006, 212, 7657)  & 150/150 & (7991.30, 188.10, 6812.80) & 148.5/150 \\
 \bottomrule
 \end{tabular}\label{tab:rezultate_n150}
 \end{table}
 
+
 \begin{table}[H]
 \centering
 \caption{Rezultate pentru $n = 300$}
-\begin{tabular}{ccll}
+\scriptsize
+\begin{tabular}{cc  cc  cc}
 \toprule
-$d$ & Algoritm & Cel mai bun rezultat  & Media rezultatelor \\
+$d$ & Algoritm 
+    & \multicolumn{2}{c}{Cel mai bun rezultat} 
+    & \multicolumn{2}{c}{Rezultat mediu} \\
+\cmidrule(r){3-4} \cmidrule(l){5-6}
+& & $(f_1, f_2, f_3)$ & Nr.\ noduri colorate
+& $(\overline{f_1}, \overline{f_2}, \overline{f_3})$ & Nr.\ noduri colorate \\
 \midrule
 \multirow{4}{*}{0.2}
-  & Greedy  & (16746, 61, 2431), 255/300 & (16609.60, 69.50, 2420.80), 254.2/300 \\
-  & Descent & (17772,635,12001), 297/300   & (17693.80, 612.70, 11860.80), 294.7/300 \\
-  & TS1     & (17602,200,4231), 288/300    & (17520.90, 182.80, 4178.20), 286.9/300 \\
-  & TS2     & (17638,186,4599), 289/300    & (17534.10 ,187.40,4546.00), 287.1/300 \\
+  & Greedy  & (16746, 61, 2431)  & 255/300 & (16609.60, 69.50, 2420.80)   & 254.2/300 \\
+  & Descent & (17772, 635, 12001)& 297/300 & (17693.80, 612.70, 11860.80) & 294.7/300 \\
+  & TS1     & (17602, 200, 4231) & 288/300 & (17520.90, 182.80, 4178.20)  & 286.9/300 \\
+  & TS2     & (17638, 186, 4599) & 289/300 & (17534.10, 187.40, 4546.00)  & 287.1/300 \\
 \midrule
 \multirow{4}{*}{0.5}
-  & Greedy  & (16705,80,3758), 251/300     & (16633.50, 89.40, 4227.80), 251/300 \\
-  & Descent & (17533,640,25642), 291/300    & (17480.90, 626.50, 25436.50), 290.4/300 \\
-  & TS1     & (17466,307,10714), 287/300    & (17336.40, 275.90, 10164.40), 282.7/300
-  27.7/30 \\
-  & TS2     & (17510,270,10697), 288/300    & (17380.40,252.00,9754.40), 284./300 \\
+  & Greedy  & (16705, 80, 3758)  & 251/300 & (16633.50, 89.40, 4227.80)   & 251/300 \\
+  & Descent & (17533, 640, 25642)& 291/300 & (17480.90, 626.50, 25436.50) & 290.4/300 \\
+  & TS1     & (17466, 307, 10714)& 287/300 & (17336.40, 275.90, 10164.40) & 282.7/300 \\
+  & TS2     & (17510, 270, 10697)& 288/300 & (17380.40, 252.00, 9754.40)  & 284/300 \\
 \midrule
 \multirow{4}{*}{0.8}
-  & Greedy  & (15227,105,5457), 258/300     & (15132.40, 98.50, 5706.40), 259.5/300 \\
-  & Descent & (15646,330,22361), 291/300    & (15610.20, 319.10, 23408.60), 288.5/300 \\
-  & TS1     & (15488,125,9583) 282/150     &  (15436.10, 149.80, 10756.60), 279.0/300 \\
-  & TS2     &  (15556,174,14805) 285/300    &  (15444.40, 131.40, 9697.10), 277.8/300 \\
+  & Greedy  & (15227, 105, 5457) & 258/300 & (15132.40, 98.50, 5706.40)   & 259.5/300 \\
+  & Descent & (15646, 330, 22361)& 291/300 & (15610.20, 319.10, 23408.60) & 288.5/300 \\
+  & TS1     & (15488, 125, 9583) & 282/300 & (15436.10, 149.80, 10756.60)& 279.0/300 \\
+  & TS2     & (15556, 174, 14805)& 285/300 & (15444.40, 131.40, 9697.10)  & 277.8/300 \\
 \bottomrule
 \end{tabular}\label{tab:rezultate_n300}
 \end{table}
+
+
+
 
 
 
@@ -146,6 +166,19 @@ $d$ & Algoritm & Cel mai bun rezultat  & Media rezultatelor \\
   
 Împărțirea tabelelor în funcție de dimensiunea are ca scop principal vizualizare eficienței algoritmilor în diferite contexte. Timpul de rulare a fost omis deoarece accentul este pus pe calitatea soluțiilor obțnute. Așa cum am menționat și în argumentarea numărului de iterații, parametrii de configurare au fost aleși astfel încât timpul de rulare să fie comparabil între algoritmi (cu excepția algoritmului Greedy, care finalizează mult mai rapid).
 
-Colorare de $10-20\%$ îmbunătățită față de greedy.
-$TS2 >= TS1 > Descent >> Greedy$
+Acum vom primi rezultatele din mai multe puncte de vedere:
+\begin{itemize}
+  \item  {\bf Numărul nodurilor colorate.} Algoritmii Descent, TS1, TS2 sunt semnificativ mai performanți în colorarea unui număr mai mare de noduri comparativ cu algoritmul Greedy, indiferent de dimensiunea grafului sau de densitatea acestuia. Densitatea grafului (d) pare să influențeze pozitiv numărul de noduri colorate, sugerând că, pentru grafuri mai dense, acești algoritmi reușesc să maximizeze utilizarea culorilor.
+  
+  \item {\bf Obiectivul $f_1$ (maximizarea câștigului)} Algoritmii TS1 și TS2 domină pentru $n=30$ și $n=150$, dar pentru $n=300$, Descent obține cel mai bun scor mediu. Această performanță superioară a lui Descent pentru grafuri mari se datorează probabil strategiei sale de multi-start. Chiar dacă mecanismul său iterativ de îmbunătățire a soluției poate nu este la fel de sofisticat ca al algoritmilor Tabu Search, pornind din multiple soluții inițiale generate de Greedy, Descent are șansa de a găsi o soluție inițială excepțional de bună. Pentru grafuri foarte mari, cu un spațiu de căutare imens, această capacitate de a exploata diverse puncte de pornire poate depăși avantajul mecanismelor iterative de rafinare ale TS1 și TS2.
+
+  \item {\bf Obiectivul $f_2$ (minimizarea numărului de 
+  întreruperi și Obiectivul $f_3$ (minimizarea timpului de flux.))} Valorile $f_2$ și $f_3$ sunt semnificativ mai mici pentru Greedy, dar nu indică o performanță superioară ci mai mult consecința colorării unui număr redus de noduri. Prin încercările algoritmilor Descent,TS1 și TS2 de a obține un câștig mai mare (corelat cu numărul de noduri colorate) generează inevitabil mai multe întreruperi și diferențe mai mari între culori. Aceste obiective cresc o dată cu numărul de noduri, dar și mai clar a densității pentru că apar constrângeri mai complexe ce necesită optimizarea multi-obiectiv.
+
+\end{itemize}
+
+Analizând în detaliu rezultatele, putem concluziona că metodele TS1 și TS2 (cu un ușor avantaj pentru TS2) oferă performanțe superioare în ceea ce privește calitatea soluțiilor, atât din perspectiva numărului de noduri colorate, cât și în raport cu cele trei obiective de optimizare. Algoritmul Descent rămâne competitiv în special în maximizarea câștigului, în timp ce Greedy se remarcă prin viteza de execuție, oferind o soluție rapidă, dar cu performanțe mai reduse în optimizarea calității.
+
+
+
 

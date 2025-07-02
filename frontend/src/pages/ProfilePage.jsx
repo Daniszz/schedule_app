@@ -1,11 +1,24 @@
 import React from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import { Camera, User, Mail } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react"; // Import useEffect
+import { useScheduleStore } from "../store/useScheduleStore"; // Import useScheduleStore
+import { useScheduleResultStore } from "../store/useScheduleResultStore"; // Import useScheduleResultStore
 
 const ProfilePage = () => {
   const { authUser, isUpdatingProfile, updateProfile } = useAuthStore();
   const [selectedImg, setSelectedImg] = useState(null);
+
+  // Destructure schedules and fetchSchedules from useScheduleStore
+  const { schedules, fetchSchedules } = useScheduleStore();
+  // Destructure results and fetchResults from useScheduleResultStore
+  const { results, fetchResults } = useScheduleResultStore();
+
+  useEffect(() => {
+    // Fetch schedules and results when the component mounts
+    fetchSchedules();
+    fetchResults();
+  }, [fetchSchedules, fetchResults]); // Depend on fetchSchedules and fetchResults to re-run if they change
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
@@ -42,7 +55,7 @@ const ProfilePage = () => {
               <label
                 htmlFor="avatar-upload"
                 className={`
-                absolute bottom-0 right-0 
+                absolute bottom-0 right-0
                 bg-base-content hover:scale-105
                 p-2 rounded-full cursor-pointer
                 transition-all duration-200
@@ -101,6 +114,24 @@ const ProfilePage = () => {
               <div className="flex items-center justify-between py-2">
                 <span>Account Status</span>
                 <span className="text-green-500"> Active</span>
+              </div>
+            </div>
+          </div>
+
+          {/* New Section for Stats */}
+          <div className="mt-6 bg-base-300 rounded-xl p-6">
+            <h2 className="text-lg font-medium mb-4">Your Statistics</h2>
+            <div className="space-y-3 text-sm">
+              <div className="flex items-center justify-between py-2 border-b border-zinc-700">
+                <span>Schedules Created</span>
+                <span>{schedules.length}</span>{" "}
+                {/* Display number of schedules */}
+              </div>
+
+              <div className="flex items-center justify-between py-2">
+                <span>Schedules Executed</span>
+                <span>{results.length}</span>{" "}
+                {/* Display number of schedule runs */}
               </div>
             </div>
           </div>

@@ -8,7 +8,7 @@ export default function ScheduleParams({
   isProcessingCSV,
 }) {
   return (
-    <div className="space-y-3">
+    <div className="space-y-2">
       {/* Status indicator */}
       {currentSchedule ? (
         <div className="text-xs text-center font-medium bg-primary/10 text-primary rounded p-2">
@@ -45,7 +45,7 @@ export default function ScheduleParams({
         <div className="form-control">
           <label className="label py-1">
             <span className="label-text text-xs font-medium">
-              Resources (L)
+              Shared Resources
             </span>
           </label>
           <input
@@ -65,7 +65,7 @@ export default function ScheduleParams({
         </div>
         <div className="form-control">
           <label className="label py-1">
-            <span className="label-text text-xs font-medium">Deadline (D)</span>
+            <span className="label-text text-xs font-medium">Deadline</span>
           </label>
           <input
             type="number"

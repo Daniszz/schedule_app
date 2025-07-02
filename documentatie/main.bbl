@@ -19,6 +19,12 @@ Raphael Dorne and Jin-Kao Hao.
 \newblock In {\em Proceedings of a Conference on Graph Theory or
   Combinatorics}, 2000.
 
+\bibitem{erdos1959random}
+Paul Erdős and Alfréd Rényi.
+\newblock On random graphs. i.
+\newblock {\em Publicationes Mathematicae}, 6(3–4):290--297, 1959.
+\newblock Archived from the original on 2020-08-07. Retrieved 2011-02-23.
+
 \bibitem{gabow1992edgecoloring}
 H.~Gabow and O.~Kariv.
 \newblock Algorithms for edge coloring bipartite graphs and multigraphs.

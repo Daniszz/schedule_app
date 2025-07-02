@@ -221,15 +221,15 @@ export default function JobNode({ data, id, isViewingResultMode }) {
               className="badge badge-info badge-sm" // You can choose a different badge style
               style={{
                 backgroundColor: data.nodeColor
-                  ? "rgba(255,255,255,0.2)"
-                  : undefined,
-                color: data.nodeColor ? "#ffffff" : undefined,
+                  ? "rgba(255, 255, 255, 0.2)"
+                  : "#ffffff", // Fundal alb când nu există nodeColor
+                color: data.nodeColor ? "#ffffff" : "#000000", // Text negru pe fundal alb
                 borderColor: data.nodeColor
-                  ? "rgba(255,255,255,0.3)"
-                  : undefined,
+                  ? "rgba(255, 255, 255, 0.3)"
+                  : "#000000",
               }}
             >
-              Color Map: {data.color_map.join(", ")}{" "}
+              Colors: {data.color_map.join(", ")}{" "}
               {/* Assuming _id is the key */}
             </div>
           )}

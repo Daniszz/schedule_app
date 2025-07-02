@@ -1,6 +1,5 @@
 \documentclass[12pt]{report}
 
-% includes
 \usepackage{geometry}           % page size
 \usepackage[utf8]{inputenc}     % encoding
 \usepackage{palatino}           % font
@@ -17,6 +16,27 @@
 \usepackage{algpseudocode}
 \usepackage{booktabs}
 \usepackage{multirow}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, backgrounds}
+
+\usepackage{listings}
+\usepackage{xcolor}
+\lstdefinelanguage{JavaScript}{
+  keywords={break, case, catch, continue, debugger, default, delete, do, else,
+    finally, for, function, if, in, instanceof, new, return, switch, this,
+    throw, try, typeof, var, void, while, with, const, let},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywords={class, export, boolean, throw, implements, import, this},
+  ndkeywordstyle=\color{blue}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{gray}\ttfamily,
+  stringstyle=\color{orange}\ttfamily,
+  morestring=[b]',
+  morestring=[b]
+}
 
 \algtext*{EndIf}   % Hides \EndIf
 \algtext*{EndFor}  % Hides \EndFor
@@ -50,6 +70,7 @@
     
     \input{front/cover}
     \input{front/titlepage}
+ 
     \input{front/declaration1}
     \input{front/declaration2}
     
@@ -61,6 +82,7 @@
     \pagenumbering{arabic}
 
     \input{chapters/introduction}
+    \input{chapters/contributie}
     \input{chapters/motivation}
     
     

@@ -4,8 +4,8 @@
 
 \section{Problema colorării și multicolorării grafurilor}
 
-{\bf Problema Colorării Grafurilor (GCP)}
-     Problema fundamentală în teoria grafurilor, constă în atribuirea de culori nodurilor unui graf astfel încât nodurile vecine să aibă culori diferite, folosing un număr minim de culori. 
+{\bf Problema Colorării Grafurilor (GCP)}\label{sec:gcp}
+     Problema fundamentală în teoria grafurilor, constă în atribuirea de culori nodurilor unui graf astfel încât nodurile vecine să aibă culori diferite, folosind un număr minim de culori. 
    
   \begin{Def}
 Fie $G = (V, E)$ un graf neorientat, unde:
@@ -13,32 +13,34 @@ Fie $G = (V, E)$ un graf neorientat, unde:
   \item $V = \{v_1, v_2, \ldots, v_n\}$ este mulțimea vârfurilor
   \item $E = \{e_{ij} \mid \text{există muchie între } v_i \text{ și } v_j\}$ este mulțimea muchiilor.
   \end{itemize} 
-  Formal problema constă în determinarea unei partiții a mulțimii $V$ cu un număr minim de clase de culori $C_1,C_2, \ldots, C_k$, astfel încât pentru fiecare muchie $e_{ij} \in E$, nodurile $v_i$ și $v_j$ să nu aparțină aceleași clase de culori.\cite{Papadimitriou1982}
-  O colorare validă a grafului $G$ este o funcție $c: V \rightarrow {1,2 \ldots l}$ ce atribuie fiecărui vârf o culoare (număr întreg pozitiv), respectând constrângerea: 
+  \end{Def}
+  Formal problema constă în determinarea unei partiții a mulțimii $V$ cu un număr minim de clase de culori \{$C_1,C_2, \ldots, C_k$\}, astfel încât pentru fiecare muchie $e_{ij} \in E$, nodurile $v_i$ și $v_j$ să nu aparțină aceleași clase de culori (\cite{Papadimitriou1982}). O colorare validă a grafului $G$ este o funcție $c: V \rightarrow \{1,2 \ldots l\}$ ce atribuie fiecărui vârf o culoare (număr întreg pozitiv), respectând constrângerea: 
 \begin{equation}
-   \forall e_{ij} \in E, |c(v_i)-c(v_j)| > 0\cite{dorne2000tabusearch}
+   \forall e_{ij} \in E, |c(v_i)-c(v_j)| > 0 (\cite{dorne2000tabusearch})
    \end{equation}
   Numărul cromati  $\chi(G)$ al grafului $G$ este numărul minim de culori necesare pentru o colorare validă a grafului. 
   \begin{equation}
 \chi(G)=\min\{k \mid \exists\, \text{colorare validă}\, c: V \rightarrow \{1,2, \ldots, k\}\}
   \end{equation}
-\end{Def}
-GCP este NP-hard, așadar de aici existența unor algoritmi euristici\cite{Costa1995}\cite{Dorne1998} și de aproximare.
+
+GCP este NP-hard, așadar de aici existența unor algoritmi euristici (\cite{Costa1995},~\cite{Dorne1998}) și de aproximare.
  
 
 
 \vspace{1cm}
 
 {\bf Problema Multicolorarii Grafurilor (MGCP)}
- Reprezintă o generalizare a problemei clasice de colorare a grafurilor, difența constând în faptul că fiecărui vârf i se atribuie un număr prestabilit de culori diferite, menținând proprietatea că vârfurile adiacente nu pot împărtăși culori comune.
+ Reprezintă o generalizare a problemei clasice de colorare a grafurilor, diferența constând în faptul că fiecărui vârf i se atribuie un număr prestabilit de culori diferite, menținând proprietatea că vârfurile adiacente nu pot împărtăși culori comune.
 \begin{Def}
   Fie $G=(V,E)$ un graf neorientat și $x: V \rightarrow \mathbb{N}^*$ o funcție care specifică numărul de culori necesare pentru fiecare vârf, unde:
   \begin{itemize}
     \item $V = \{v_1, v_2, \ldots, v_n\}$ este mulțimea vârfurilor
     \item $E = \{e_{ij} \mid \text{există muchie între } v_i \text{ și } v_j\}$ este mulțimea muchiilor.
     \item $x(v_i)$ este numărul de culori distincte care trebuie atribuite vârfului $v_i$.
-    
+   
   \end{itemize}
+   \end{Def}
+
   O multicolorare validă a grafului $G$ este o funcție $c:V \rightarrow  \mathcal{P}(\mathbb{N}^*)$ care atribuie fiecărui vârf un set de culori, respectând
   constrângerile:
   \begin{equation}
@@ -55,13 +57,13 @@ GCP este NP-hard, așadar de aici existența unor algoritmi euristici\cite{Costa
 \begin{equation}
 \chi_m(G,x) = \min\left\{k \;\middle|\; \exists\, \text{multicolorare validă } c \text{ cu } \bigcup_{v \in V} c(v) \subseteq \{1, 2, \ldots, k\} \right\}
 \end{equation}
-Ca și GCP, problema multicolorării grafurilor este NP-hard, necesitând algoritmi euristici și de aproximare pentru instanțe mari.
-\end{Def}
+Ca și \textit{GCP} (\ref{sec:gcp}), problema multicolorării grafurilor este NP-hard, necesitând algoritmi euristici și de aproximare pentru instanțe mari.
+
 
 \section{Diferențe între colorare clasică și multicolorare.}
  Vom analiza în continuare comparația dintre colorarea clasică și multicolorarea grafurilor din mai multe perspective relevante pentru planificarea sarcinilor. Dincolo de observația deja binecunoscută conform căreia, în colorarea clasică, unui vârf i se atribuie o singură culoare, în timp ce în multicoloreare se atribuie un set de culori, există și alte diferențe semnificative:
  \begin{itemize}
-  \item Concepte de preempțiune și Non-preempțiune:
+  \item {\bf Concepte de preempțiune și non-preempțiune:}
   \begin{itemize}
     \item Colorarea clasică:  Nu include noțiuni de preempțiune, deoarece fiecărui vârf i se alocă o singură culoare, deci execuția echivalentă a sarcinii este considerată continuă și indivizibilă.
     \item Multicolorarea: Introduce noțiunile de: 
@@ -70,7 +72,7 @@ Ca și GCP, problema multicolorării grafurilor este NP-hard, necesitând algori
       \item Non-preempțiune:  culorile trebuie să formeze un interval contiguu, reflectând faptul că sarcina trebuie să fie executată fără întrerupere.
     \end{itemize}
     \end{itemize}
-    \item Obiectivele funcției de cost:
+    \item {\bf Obiectivele funcției de cost:}
     \begin{itemize}
       \item Colorarea clasică: Obiectivul principal este minimizarea numărului de culori folosite, ceea ce echivalează cu utilizarea eficientă a resurselor fără conflicte.
       \item Multicolorarea: Pe lângă minimizarea culorilor, apar și alte obiective multiple și ierarhizate, specifice problemelor reale de planificare:
@@ -81,43 +83,45 @@ Ca și GCP, problema multicolorării grafurilor este NP-hard, necesitând algori
       \end{itemize} 
     \end{itemize}   
   
- \item Restricții privind resursele și acceptarea sarcinilor:
+ \item {\bf Restricții privind resursele și acceptarea sarcinilor:}
   \begin{itemize}
     \item Colorarea clasică: De obicei, nu implică restricții de capacitate pentru fiecare culoare (adică, un număr nelimitat de vârfuri pot primi aceesți culoare dacă nu sunt adiacente).
-    \item Multicolorarea: În aplicațiile de planificare, adesea se confruntă cu un număr fix de ``mașini'' sau resurse partajate, limitând câte vârfuri pot aveea aceeași culoare la un moment dat. De asemenea, introduce problema acceptării/respingerii sarcinilor, unde nu toate sarcinile pot fi programate.
+    \item Multicolorarea: În aplicațiile de planificare, se regăsesc adesea un număr fix de ``mașini'' sau resurse partajate, limitând câte vârfuri pot aveea aceeași culoare la un moment dat. De asemenea, introduce problema acceptării/ respingerii sarcinilor, unde nu toate sarcinile pot fi programate.
   \end{itemize}
-  \item Complexitate în clase specifice de grafuri: Deși ambele probleme sunt NP-hard în general, complexitatea lor poate diferi semnificativ chiar și pentru clase de grafuri considerate ``ușoare'' în colorarea clasică.\cite{halldorsson2004multicoloring}
+  \item {\bf Complexitate în clase specifice de grafuri:}
+   Deși ambele probleme sunt NP-hard în general, complexitatea lor poate diferi semnificativ chiar și pentru clase de grafuri considerate ``ușoare'' în colorarea clasică (\cite{halldorsson2004multicoloring}).
   \begin{itemize}
-   \item Drumuri (Paths): Colorarea unitară și problemele de makespan sunt triviale, dar multicolorarea sumă preemptivă este considerată dificilă.\cite{halldorsson2004multicoloring}
-   \item Arbori (Trees): Multicolorarea sumă preemptivă este puternic NP-hard, în timp ce colorarea sumă este ușor de rezolvat.\cite{halldorsson2004multicoloring}
-  \item Grafuri Interval: Multicolorarea makespan non-preemptivă este NP-hard și APX-hard, în timp ce colorarea clasică este ușor de rezolvat printr-o metodă greedy.\cite{halldorsson2004multicoloring}
+   \item Drumuri (Paths): Colorarea unitară și problemele de makespan sunt triviale, dar problema de multicolorare sumă cu preempțiune este considerată dificilă (\cite{halldorsson2004multicoloring}).
+   \item Arbori (Trees): Problema de maximizare a sumei în contextul multicolorării preemptive este puternic NP-hard, în timp ce colorarea sumă este ușor de rezolvat (\cite{halldorsson2004multicoloring}).
+  \item Grafuri Interval: Multicolorarea makespan non-preemptivă este NP-hard și APX-hard, în timp ce colorarea clasică este ușor de rezolvat printr-o metodă greedy (\cite{halldorsson2004multicoloring}).
   \end{itemize}
 
  \end{itemize}
 \section{Aplicații relevante ale multicolorării}
 Problema multicolorării grafurilor este deosebit de importantă în contextul planificării joburilor (job scheduling) și alocării resurselor, extinzând aplicațiile clasice ale colorării grafurilor prin abordarea unor scenarii mai complexe. Următoarele aplicații exemplifică perfect această relavență:
 \begin{itemize}
-  \item {\bf Planificarea Joburilor (Job Scheduling)} Multicolorarea oferă un cadru natural pentru modelarea problemelor de planificare din producție, unde:
+  \item {\bf Planificarea Joburilor (Job Scheduling).} Multicolorarea oferă un cadru natural pentru modelarea problemelor de planificare din producție, unde:
    \begin{itemize}
-    \item Joburile cu durate variate necesită multiple unițăți de timp consecutive (culori)
-    \item Resursele partajate limitează numărul de joburi care pot rula simultan.
-    \item Resursele critice creează incompatibilități între anumite joburi
-    \item Preempția controlată permite întreruperea și reluarea joburilor.
+    \item joburile cu durate variate necesită multiple unițăți de timp consecutive (culori)
+    \item resursele partajate limitează numărul de joburi care pot rula simultan.
+    \item resursele critice creează incompatibilități între anumite joburi
+    \item preempțiunea controlată permite întreruperea și reluarea joburilor.
    \end{itemize}
    Limita așadar a colorării clasice constă în faptul că consideră doar scenariile simplificate unde toate taskurile au durata unitară, multicolorarea pe de altă partea poate surprinde durata variabilă a joburilor și necesitatea de alocare a unor intervale de timp consecutive.
    Mai multe detalii despre această aplicație vor fi prezentate în capitolul 2.
-  \item {\bf Planificarea Orare (Timetabling)} Dacă am presupune că toate cursurile au aceeași durată (o singură oră) colorarea clasică ar fi suficientă, însă realitate academică este mult mai complexă. Multicolorarea așadar poate permite:
+  \item {\bf Planificarea orarului (Timetabling).} Dacă am presupune că toate cursurile au aceeași durată (o singură oră) colorarea clasică ar fi suficientă, însă realitate academică este mult mai complexă. Multicolorarea așadar poate permite:
   \begin{itemize}
-    \item Cursuri cu durate diferite $-$ unele cursuri se rezumă la o oră, altele 2$-$3 ore.
-    \item Cursuri cu apariții multple $-$ același curs poate avea mai multe sesiuni pe săptămână.
-    \item Alocarea de intervale consecutive pentru cursurile de lungă durată. 
+    \item cursuri cu durate diferite $-$ unele cursuri se rezumă la o oră, altele 2$-$3 ore.
+    \item cursuri cu apariții multple $-$ același curs poate avea mai multe sesiuni pe săptămână.
+    \item alocarea de intervale consecutive pentru cursurile de lungă durată. 
   \end{itemize}
-  \item {\bf Alocarea Frecvențelor în Comunicațiile Fără Fir }. În rețelele celulare, problema alocării canalelor ilustrează perfect necesitatea multicolorării:
+  \item {\bf Alocarea frecvențelor în comunicațiile fără fir}. În rețelele celulare, problema alocării canalelor ilustrează perfect necesitatea multicolorării:
   \begin{itemize}
-    \item Stațiile de bază (noduri) trebuie să gestioneze multiple apeluri simultan.
-    \item Fiecare apel necesită un canal de frecvență dedicat.
-    \item Interferența geografică între stații adiacente interzice folosirea acelorași frecvențe. 
-    \item Numărul de canale per stație variază în funcție de traficul de apeluri.
+    \item stațiile de bază (noduri) trebuie să gestioneze multiple apeluri simultan.
+    \item fiecare apel necesită un canal de frecvență dedicat.
+    \item interferența geografică între stații adiacente interzice folosirea acelorași \\
+    frecvențe. 
+    \item numărul de canale per stație variază în funcție de traficul de apeluri.
   \end{itemize}
   Deci graful nostru ar reprezinta stațiile de bază prin noduri, iar muchille ar reprezinta adiacența geografică. Fiecare nod necesită atribuirea unui număr de culori (canale) egal cu numărul de apeluri care se conectează la acea stație de bază. Colorarea tradițională nu poate surprinde acest trafic care necesită multiple canale simultan, limitându-se la o singură frecvență per stație.
 \end{itemize}

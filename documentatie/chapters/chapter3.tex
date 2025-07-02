@@ -1,8 +1,11 @@
-\chapter{Algoritmi implementați}
-Pentru rezolvarea problemei P, am dezvoltat 3 algoritmi: Greedy (constructiv), Descent (căutare locală), Tabu Search (metaeuristic avansat). Voi parcurge în ordine fiecare algoritm oferind pseudocodul corespunzător,urmat de o descriere intuitivă a logicii și principiului de funcționare. De asemenea, este de menționat că fiecare algoritm primește ca parametrii de bază graful $G=(V,E)$, vectorul de culori $p$, numărul total de unități de timp/culori $D$, limia numărului de unități de resurse partajate/culori $l$ și vectorul de câștig $g$. Mai multe detalii despre metoda prin care acești parametri au fost aleși vor fi prezentate în capitolul următor.
+\chapter{Algoritmi implementați}\label{cap:algoritmi}
+
+   Pentru rezolvarea problemei P, am dezvoltat 3 algoritmi: Greedy (constructiv), Descent (căutare locală), Tabu Search (metaeuristic avansat). Voi parcurge în ordine fiecare algoritm oferind pseudocodul corespunzător, urmat de o descriere intuitivă a logicii și principiului de funcționare. De asemenea, este de menționat că fiecare algoritm primește ca parametrii de bază graful $G=(V,E)$, vectorul de culori $p$, numărul total de unități de timp/culori $D$, limita numărului de unități de resurse partajate/culori $l$ și vectorul de câștig $g$. Mai multe detalii despre metoda prin care acești parametri au fost aleși vor fi prezentate în capitolul următor.
 
 
 \section{Algoritmul Greedy}
+
+Această euristică constructivă pornește de la graful de incompatibilitate și se bazează pe alegerea, la fiecare pas, a nodului cu cel mai mare câștig. Din mulțimea de culori $C$ sunt selectate doar acele culori care respectă constrângerile fundamentale specifice nodului respectiv, notate cu $A_i$. Un nod poate fi colorat complet sau deloc; dacă în mulțimea $A_i$ nu există cel puțin $p[i]$ culori admisibile, nodul este exclus din colorare.
 
 \begin{algorithm}[H] 
 \caption{Greedy}\label{alg:greedy_multicoloring} 
@@ -31,9 +34,8 @@ Pentru rezolvarea problemei P, am dezvoltat 3 algoritmi: Greedy (constructiv), D
 \end{algorithmic} 
 \end{algorithm}
 
-Această euristică constructivă pornește de la graful de incompatibilitate și se bazează pe alegerea, la fiecare pas, a nodului cu cel mai mare câștig. Din mulțimea de culori $C$ sunt selectate doar acele culori care respectă constrângerile fundamentale specifice nodului respectiv, notate cu $A_i$. Un nod poate fi colorat complet sau deloc; dacă în mulțimea $A_i$ nu există cel puțin $p[i]$ culori admisibile, nodul este exclus din colorare.
 
-Pentru a minimiza întreruperile și diferențele dintre culorile alocate, se caută cel mai mare subset consecutiv de culori din $A_i$, denumit $B_i$. Dacă dimensiunea lui $B_i$ este suficientă pentru a acoperi cerința $p[i]$, nodului $i$ i se atribuie $p[i]$ culori consecutive, alese aleatoriu, din $B_i$.În caz contrar, se atribuie toate culorile din $B_i$, iar restul necesar este completat cu culori din $A_i \setminus B_i$. Completarea se face astfel încât să se minimizeze întreruperile — considerate binar: 0 dacă noile culori sunt consecutive cu cele deja atribuite, 1 în caz contrar. Atunci când întreruperile nu pot fi complet evitate, se preferă culorile aflate cât mai aproape de capătul superior al lui $p_i$, pentru a menține diferențele dintre culori cât mai mici. Această alegere are ca scop secundar reducerea timpului total de flux, asociat obiectivului $f_3$.
+Pentru a minimiza întreruperile și diferențele dintre culorile alocate, se caută cel mai mare subset consecutiv de culori din $A_i$, denumit $B_i$. Dacă dimensiunea lui $B_i$ este suficientă pentru a acoperi cerința $p[i]$, nodului $i$ i se atribuie $p[i]$ culori consecutive, alese aleatoriu, din $B_i$. În caz contrar, se atribuie toate culorile din $B_i$, iar restul necesar este completat cu culori din $A_i \setminus B_i$. Completarea se face astfel încât să se minimizeze întreruperile — considerate binar: 0 dacă noile culori sunt consecutive cu cele deja atribuite, 1 în caz contrar. Atunci când întreruperile nu pot fi complet evitate, se preferă culorile aflate cât mai aproape de capătul superior al lui $p[i]$, pentru a menține diferențele dintre culori cât mai mici. Această alegere are ca scop secundar reducerea timpului total de flux, asociat obiectivului $f_3$.
 
 
 
@@ -43,13 +45,13 @@ Pentru a minimiza întreruperile și diferențele dintre culorile alocate, se ca
 \begin{algorithmic}[1]
 \small
 \While{numărul de restarturi $>0$}
-\State{$s \gets$ soluție inițială generată cu Greedy (vezi Secțiunea~\ref{alg:greedy_multicoloring})}
+\State{$s \gets$ soluție inițială generată cu Greedy (vezi Secțiunea~\ref{alg:greedy_multicoloring}) } 
 \While{nu este îndeplinită o condiție de oprire}
     \ForAll{ $i \in V$}
         \If{$|A_i| \geq p[i]$}
-            \State{generează o nouă soluție $s_i$ aplicând  $R^{SD}$ în $i$}
+            \State{  $s_i$ $ \gets$  $Recolorare^{SD}$ ($i$)}
         \Else{}
-            \State{generează o nouă soluție $s_i$ aplicând $R^{Enf}$ în $i$}
+            \State{ $s_i$ $\gets$ $Recolorare^{Enf}$  ($i$)}
         \EndIf{}
         \State{păstrează cea mai bună soluție din vecinătatea $N(s)$}
     \EndFor{}
@@ -61,10 +63,10 @@ Pentru a minimiza întreruperile și diferențele dintre culorile alocate, se ca
 \State{\Return$s$}
 \end{algorithmic}
 \end{algorithm}
-Algorimtul Descent  este o metodă de căutare locală cu restarturi multiple. Acesta pornește de la o soluție inițială construită cu o euristică greedy și o îmbunătățește iterativ prin aplicarea unor mutări asupra vârfurilor, în funcție de culorile disponibile.Deoarece problema nu permite colorarea parțială (fiecare vârf trebuie colorat complet cu exact $p_i$ culori), mutările aplicate recolorează/colorează complet un vârf. Procesul continuă până când nu se mai pot obține îmbunătățiri (optimum local) sau până la atingerea unui număr maxim de iterații. La finalul fiecărei runde, dacă soluția curentă este mai bună decât cea optimă cunoscută, aceasta este salvată. Alegerea mutării depinde de numărul de culori admsibile $|A_i|$ pentru un vârf $i$. Daca $|A_i| \geq p_i$ se aplică $R^{SD}$, în caz contrar se aplică $R^{Enf}$.
+Algorimtul Descent  este o metodă de căutare locală cu restarturi multiple. Acesta pornește de la o soluție inițială construită cu o euristică greedy și o îmbunătățește iterativ prin aplicarea unor mutări asupra vârfurilor, în funcție de culorile disponibile. Deoarece problema nu permite colorarea parțială (fiecare vârf trebuie colorat complet cu exact $p_i$ culori), mutările aplicate recolorează/colorează complet un vârf. Procesul continuă până când nu se mai pot obține îmbunătățiri (optimum local) sau până la atingerea unui număr maxim de iterații. La finalul fiecărei runde, dacă soluția curentă este mai bună decât cea optimă cunoscută, aceasta este salvată. Alegerea mutării depinde de numărul de culori admsibile $|A_i|$ pentru un vârf $i$. Daca $|A_i| \geq p[i]$ se aplică $Recolorare^{SD}$, în caz contrar se aplică $Recolorare^{Enf}$.
 
 \begin{algorithm}[H]
-\caption{$R^{SD}$}\label{alg:RSD}
+\caption{$Recolorare^{SD}$ ($i$)}\label{alg:RSD}
 \begin{algorithmic}[1]
 \small
 \State{$s^\prime \gets s$}
@@ -77,10 +79,10 @@ Algorimtul Descent  este o metodă de căutare locală cu restarturi multiple. A
 \State{\Return{$s^\prime$}}
 \end{algorithmic}
 \end{algorithm}
-$R^{SD}$  are ca scop  minimizarea gradului de saturație al vecinilor necolorați ai lui i (numărul de culori diferite utilizate de vecinii săi). La fiecare pas alegem o culoare $c \in A_i$ care maximizează suma $\sum_{j \in Z_i} u_c(j)$, unde $Z_i$ este mulțimea vecinilor necolorații ai nodului $i$ și $u_c(j)=1$ dacă culoarea este prezentă în vecinii lui j, 0 altfel.Pe scurt, sunt preferate culorile deja „vizibile” în vecinătatea vecinilor lui i, pentru a evita creșterea gradului de saturație și, implicit, restrângerea opțiunilor de colorare în pașii următori.
+$Recolorare^{SD}$  are ca scop  minimizarea gradului de saturație al vecinilor necolorați ai lui \textit{i} (numărul de culori diferite utilizate de vecinii săi). La fiecare pas alegem o culoare $c \in A_i$ care maximizează suma $\sum_{j \in Z_i} u_c(j)$, unde $Z_i$ este mulțimea vecinilor necolorații ai nodului $i$ și $u_c(j)=1$ dacă culoarea este prezentă în vecinii lui j, 0 altfel. Pe scurt, sunt preferate culorile deja „vizibile” în vecinătatea vecinilor lui \textit{i}, pentru a evita creșterea gradului de saturație și, implicit, restrângerea opțiunilor de colorare în pașii următori.
 \vspace{1cm}
 \begin{algorithm}[H]
-\caption{$R^{Enf}$}\label{alg:RENF}
+\caption{$Recolorare^{Enf}$ ($i$)}\label{alg:RENF}
 \begin{algorithmic}[1]
 \small
  \State{$s^\prime \gets s$}
@@ -104,7 +106,7 @@ $R^{SD}$  are ca scop  minimizarea gradului de saturație al vecinilor necolora�
       
 
 
-$R^{Enf}$  începe prin a atribui toate culorile admisibile vârfului ($|A_i|<p_i$). Pentru culorile lipsă, identifică culori ``ne-saturate'', adică culori ce respectă constrângerea de capacitate (apar în mai puțin de l vârfuri). Apoi, se estimează pierderea de câștig (în funcție de ponderea vecinilor afectați) pentru eliminarea acestor culori din vecini. Se selectează culorile cu pierdere minimă și se decolorează vecinii care le folosesc, pentru a permite „furtul” acestor culori și completarea colorației vârfului i.
+$Recolorare^{Enf}$  începe prin a atribui toate culorile admisibile vârfului ($|A_i|<p[i]$). Pentru culorile lipsă, identifică culori ``ne-saturate'', adică culori ce respectă constrân- gerea de capacitate (apar în mai puțin de \textit{l} vârfuri). Apoi, se estimează pierderea de câștig (în funcție de ponderea vecinilor afectați) pentru eliminarea acestor culori din vecini. Se selectează culorile cu pierdere minimă și se decolorează vecinii care le folosesc, pentru a permite „furtul” acestor culori și completarea colorației vârfului i.
 
 
 
@@ -139,7 +141,8 @@ $R^{Enf}$  începe prin a atribui toate culorile admisibile vârfului ($|A_i|<p_
 \State{\Return{$s^*$}}
 \end{algorithmic}
 \end{algorithm}
- Tabu Search este un algortim de căutare locală, similar cu algoritmul Descent, care pornește de la o soluție inițială generată prin metodă euristică Greedy (vezi Secțiunea~\ref{alg:greedy_multicoloring}). La fiecare iterație, se generează vecinătatea soluției curente $N(s)$, adică mulțimea soluțiilor obținute prin modificarea culorii atribuite unui singur vârf din $s$, respectând constrângerile problemei. Din această vecinătate, se selectează cea mai bună soluție non-tabu, adică o soluție care nu implică mutări interzise temporare. Mutările interzise sunt gestionate printr-o listă tabu, care stochează nodurile modificate (recolorate/colorate) recent, împiedicând revenirea pentru un interval de timp la soluții anterioare și astfel evitând ciclurile sau blocarea în minime locale. Pentru fiecare nod $v$ afectat, lista tabu este actualizată și îi interzice modificarea pentru un număr fix de iterații $tab$.
+ Tabu Search este un algortim de căutare locală, similar cu algoritmul Descent, care pornește de la o soluție inițială generată prin metodă euristică Greedy (~\ref{alg:greedy_multicoloring}). La fiecare iterație, se generează vecinătatea soluției curente $N(s)$, adică mulțimea soluțiilor obținute prin modificarea culorii atribuite unui singur vârf din $s$, respectând constrângerile problemei. Din această vecinătate, se selectează cea mai bună soluție non-tabu, adică o soluție care nu implică mutări interzise temporare. Mutările interzise sunt gestionate printr-o listă tabu, care stochează nodurile modificate (recolorate/colorate) recent, împiedicând revenirea pentru un interval de timp la soluții anterioare și astfel evitând ciclurile sau blocarea în minime locale. Pentru fiecare nod $v$ afectat, lista tabu este actualizată și îi interzice modificarea pentru un număr fix de iterații $tab$.
+
 
  Algoritmul include și un mecanism de diversificare. Dacă în $I_{\max}$ iterații consecutive nu se obține nicio îmbunătățire privind cele trei obiective, se decolorează  un procentaj $b\%$ din vârfurile soluției curente. Scopul esențial este a de a permite algoritmului explorarea altor regiuni din spațiul soluțiilor.
 
@@ -150,27 +153,27 @@ $R^{Enf}$  începe prin a atribui toate culorile admisibile vârfului ($|A_i|<p_
 \small
 \State{$N(s) \gets \emptyset$, $Q \gets \emptyset$}
 \If{strategia = 2}
-    \State{Setează $R \in \{R^{Exact}, R^{SD}\}$ cu probabilități $\gamma$ și $1-\gamma$}
+    \State{Setează $Recolorare \in \{Recolorare^{Exact}, Recolorare^{SD}\}$ cu probabilități $\gamma$ și $1-\gamma$}
 \EndIf{}
-\ForAll{$i \in$ $V^\prime$} \Comment{$V^\prime$ reprezintă un procentaj de vârfuri alese aleatoriu din $V$}
+\ForAll{$i \in$ $V^\prime$} \Comment{$V^\prime$ reprezintă o submulțime de vârfuri alese aleatoriu din $V$}
     \If{$i$ este complet colorat și prob $< 0.25$}
-        \State{Aplică $R^{Drop}(i)$}
+        \State{Aplică $Recolorare^{Drop}(i)$}
     \EndIf{}
     \If{prob $<$ 0.25}
         \If{$|A_i| < p[i]$}
-            \State{Aplică $R^{Enf}(i)$}
+            \State{Aplică $Recolorare^{Enf}(i)$}
         \Else{}
             \If{strategia = 1}
-                \State{Aplică $R^{SD}(i)$ și adaugă $i$ în $Q$}
+                \State{Aplică $Recolorare^{SD}(i)$ și adaugă $i$ în $Q$}
             \Else{}
-                \State{Aplică $R(i)$} \Comment{selectat anterior între $R^{Exact}$ și $R^{SD}$}
+                \State{Aplică $Recolorare(i)$} \Comment{selectat anterior între $Recolorare^{Exact}$ și $Recolorare^{SD}$}
             \EndIf{}
         \EndIf{}
     \EndIf{}
 \EndFor{}
 \If{strategia = 1 și $Q \neq \emptyset$}
     \State{Sortează $Q$ descrescător după câștig}
-    \State{Aplică $R^{Exact}$ la 25\% dintre primii $q$ din $Q$ (aleator)}
+    \State{Aplică $Recolorare^{Exact}$ la 25\% dintre primii $q$ din $Q$ (aleator)}
 \EndIf{}
 \State{\Return$N(s)$}
 \end{algorithmic}
@@ -180,21 +183,22 @@ Vecinătatea unei soluții curente $s$ este generată prin aplicarea unor mișc�
 Pentru fiecare $i \in V'$, se aplică una dintre următoarele mișcări, în funcție de strategia selectată și de condițiile locale:
 
 \begin{itemize}
-\item \textbf{$R^{Drop}(i)$}, cu probabilitate de $25\%$, dacă nodul $i$ este complet colorat. Această acțiune elimină toate culorile asociate nodului $i$.
+\item \textbf{$Recolorare^{Drop}(i)$}, cu probabilitate de $25\%$, dacă nodul $i$ este complet colorat. Această acțiune elimină toate culorile asociate nodului $i$.
  \item Tot cu o probabilitate de $25\%$, se aplică una dintre următoarele:
 \begin{itemize}
-    \item \textbf{$R^{Enf}(i)$}, dacă $|A_i| < p[i]$, adică numărul de culori admisibile este insuficient pentru colorarea completă a nodului.
+    \item \textbf{$Recolorare^{Enf}(i)$}, dacă $|A_i| < p[i]$, adică numărul de culori admisibile este insuficient pentru colorarea completă a nodului.
     
-    \item \textbf{Strategia 1:} Dacă $|A_i| \geq p[i]$, se aplică $R^{SD}(i)$, iar nodul $i$ este adăugat în lista $Q$. După parcurgerea tuturor vârfurilor, lista $Q$ este sortată descrescător după câștig, iar $R^{Exact}$ este aplicată pentru $25\%$ dintre primele $q$ noduri (selectate aleatoriu).
+    \item \textbf{Strategia 1:} Dacă $|A_i| \geq p[i]$, se aplică $Recolorare^{SD}(i)$, iar nodul $i$ este adăugat în lista $Q$. După parcurgerea tuturor vârfurilor, lista $Q$ este sortată descrescător după câștig, iar $Recolorare^{Exact}$ este aplicată pentru $25\%$ dintre primele $q$ noduri (selectate aleatoriu).
     
-    \item \textbf{Strategia 2:} Dacă $|A_i| \geq p[i]$, se aplică fie $R^{SD}(i)$, fie $R^{Exact}(i)$, cu probabilități $\gamma$ și $1 - \gamma$, respectiv.
+    \item \textbf{Strategia 2:} Dacă $|A_i| \geq p[i]$, se aplică fie $Recolorare^{SD}(i)$, fie \\
+    $Recolorare^{Exact}(i)$, cu probabilități $\gamma$ și $1 - \gamma$, respectiv.
 \end{itemize}
 \end{itemize}
-În urma aplicării acestor mișcări, mulțimea soluțiilor obținute formează vecinătatea $N(s)$ a soluției curente $s$, care este apoi returnată și utilizată în cadrul algoritmului Tabu Search~\ref{alg:tabu_search}.
+În urma aplicării acestor mișcări, mulțimea soluțiilor obținute formează vecinătatea $N(s)$ a soluției curente $s$, care este apoi returnată și utilizată în cadrul algoritmului Tabu Search (vezi Secțiunea ~\ref{alg:tabu_search}).
 
 
 \begin{algorithm}[H]
-\caption{$R_{exact}$}\label{alg:Rexact}
+\caption{$Recolorare^{exact}$ ($i$)}\label{alg:Rexact}
 \begin{algorithmic}[1]
 \small
 \For{$q = 1$ \textbf{to} $p_i$}
@@ -232,7 +236,9 @@ Pentru fiecare $i \in V'$, se aplică una dintre următoarele mișcări, în fun
 \end{algorithmic}
 \end{algorithm}
 
-Algoritmul $R_{exact}$ are ca scop generarea unei secvențe optime de culori pentru un vârf $i$, minimizând două obiective: \textbf{numărul de întreruperi ($f_2$)} și \textbf{diferența de interval (range) ($f_3$)}. O \textit{întrerupere} este definită ca situația în care două culori consecutive dintr-o secvență au o diferență strict mai mare decât 1. \textit{Range-ul} reprezintă diferența dintre cea mai mică și cea mai mare culoare din secvență.
+\vspace{1cm}
+
+Algoritmul $Recolorare_{exact}$ are ca scop generarea unei secvențe optime de culori pentru un vârf $i$, minimizând două obiective: \textbf{numărul de întreruperi ($f_2$)} și \textbf{diferența de interval (range) ($f_3$)}. O \textit{întrerupere} este definită ca situația în care două culori consecutive dintr-o secvență au o diferență strict mai mare decât 1. \textit{Range-ul} reprezintă diferența dintre cea mai mică și cea mai mare culoare din secvență.
 
 Algoritmul parcurge secvențe de lungime $q$ de la $1$ la $p_i$ (lungimea maximă dorită) și, pentru fiecare lungime $q$, evaluează fiecare culoare $c \in A_i$ (mulțimea culorilor admisibile pentru vârful $i$) ca potențială ultimă culoare a unei secvențe optime. Se utilizează trei structuri de date: $BestS(q, c)$ pentru a reține secvența optimă, $Lint(q, c)$ pentru numărul de întreruperi și $Lrg(q, c)$ pentru range-ul corespunzător.
 

@@ -11,20 +11,14 @@ export const viewResults = async (req, res) => {
   try {
     const results = await ScheduleSchemaResult.find({
       userId: req.user._id,
-    }).populate("schemaId"); // Păstrăm populate pentru schemaId dacă ScheduleSchemaResult are o referință către Schedule
-    // ELIMINAT: .populate("fully_colored_jobs");
-    // fully_colored_jobs sunt ID-uri de job-uri încorporate, nu referințe către o colecție separată.
-    // Frontend-ul va folosi aceste ID-uri pentru a le găsi în job-urile schedule-ului.
-
+    }).populate("schemaId");
     res.json(results);
   } catch (error) {
     console.error("Error fetching results:", error); // Adaugă logare pentru depanare
-    res
-      .status(500)
-      .json({
-        message: "Eroare la preluarea rezultatelor",
-        error: error.message,
-      });
+    res.status(500).json({
+      message: "Eroare la preluarea rezultatelor",
+      error: error.message,
+    });
   }
 };
 
@@ -143,12 +137,10 @@ export const createResult = async (req, res) => {
     });
   } catch (error) {
     console.error("Error in createResult controller:", error); // Log the initial error
-    res
-      .status(400)
-      .json({
-        message: "Eroare la crearea rezultatului",
-        error: error.message,
-      });
+    res.status(400).json({
+      message: "Eroare la crearea rezultatului",
+      error: error.message,
+    });
   }
 };
 
@@ -168,12 +160,10 @@ export const detailedResult = async (req, res) => {
     res.json(result);
   } catch (error) {
     console.error("Error fetching detailed result:", error); // Log the error
-    res
-      .status(500)
-      .json({
-        message: "Eroare la preluarea rezultatului",
-        error: error.message,
-      });
+    res.status(500).json({
+      message: "Eroare la preluarea rezultatului",
+      error: error.message,
+    });
   }
 };
 
@@ -192,11 +182,9 @@ export const deleteResult = async (req, res) => {
     res.json({ message: "Rezultatul a fost șters cu succes" });
   } catch (error) {
     console.error("Error deleting result:", error); // Log the error
-    res
-      .status(500)
-      .json({
-        message: "Eroare la ștergerea rezultatului",
-        error: error.message,
-      });
+    res.status(500).json({
+      message: "Eroare la ștergerea rezultatului",
+      error: error.message,
+    });
   }
 };

@@ -59,7 +59,7 @@ export default function ControlPanel({
 
   return (
     <>
-      <div className="absolute -top-2 -left-2 z-10 scale-80">
+      <div className="absolute -top-2 -left-2 z-10 scale-0.8">
         <div className="card bg-base-100 shadow-xl w-80">
           <div className="card-body p-4">
             {/* Header */}

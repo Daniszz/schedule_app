@@ -145,8 +145,8 @@ export default function CSVImporter({
         gain: row.gain,
         processing_time: row.processing_time,
         position: {
-          x: 100 + (i % 5) * 200,
-          y: 100 + Math.floor(i / 5) * 150,
+          x: 100 + (i % 5) * 300, // mai mult spațiu între coloane
+          y: 100 + Math.floor(i / 5) * 250,
         },
       };
 
