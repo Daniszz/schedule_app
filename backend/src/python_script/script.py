@@ -18,10 +18,16 @@ def convert_for_json(data):
 
 def evaluate_algorithm(G, p, l, D, gain, algorithm, **kwargs):
     coloring, fully_colored = algorithm(G, p, l, D, gain, **kwargs)
-    total_gain, interruptions, color_range = calculate_objectives(G, coloring, gain)
+    
+    coloring_shifted = {
+        node: {c + 1 for c in colors} 
+        for node, colors in coloring.items()
+    }
+    
+    total_gain, interruptions, color_range = calculate_objectives(G, coloring_shifted, gain)
     
     return {
-        "coloring": coloring,
+        "coloring": coloring_shifted,
         "fully_colored": fully_colored,
         "metrics": {
             "total_gain": total_gain,
@@ -29,6 +35,7 @@ def evaluate_algorithm(G, p, l, D, gain, algorithm, **kwargs):
             "color_range": color_range
         }
     }
+
 
 def run_scheduler(input_data):
     G = nx.Graph()

@@ -13,12 +13,11 @@ import {
 
 export default function Instructions() {
   return (
-    // Removed fixed 'w-80' to allow the card to expand within the modal
     <div className="card bg-base-100 shadow-xl w-full">
       <div className="card-body">
         <h3 className="card-title text-sm mb-3">Quick Start Guide</h3>
 
-        {/* New: Grid container for two columns */}
+      
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3 text-xs text-base-content/70">
           {/* Setup Phase */}
           <div className="flex items-start gap-3">

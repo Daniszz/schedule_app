@@ -1,24 +1,21 @@
 import React from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import { Camera, User, Mail } from "lucide-react";
-import { useState, useEffect } from "react"; // Import useEffect
-import { useScheduleStore } from "../store/useScheduleStore"; // Import useScheduleStore
-import { useScheduleResultStore } from "../store/useScheduleResultStore"; // Import useScheduleResultStore
+import { useState, useEffect } from "react"; 
+import { useScheduleStore } from "../store/useScheduleStore"; 
+import { useScheduleResultStore } from "../store/useScheduleResultStore";
 
 const ProfilePage = () => {
   const { authUser, isUpdatingProfile, updateProfile } = useAuthStore();
   const [selectedImg, setSelectedImg] = useState(null);
 
-  // Destructure schedules and fetchSchedules from useScheduleStore
   const { schedules, fetchSchedules } = useScheduleStore();
-  // Destructure results and fetchResults from useScheduleResultStore
   const { results, fetchResults } = useScheduleResultStore();
 
   useEffect(() => {
-    // Fetch schedules and results when the component mounts
     fetchSchedules();
     fetchResults();
-  }, [fetchSchedules, fetchResults]); // Depend on fetchSchedules and fetchResults to re-run if they change
+  }, [fetchSchedules, fetchResults]); 
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];

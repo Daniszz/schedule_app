@@ -95,7 +95,6 @@ export default function CSVImporter({
     const processedConflicts = [];
     const jobNameToId = new Map();
 
-    // First pass: create jobs and map names to IDs
     for (let i = 0; i < data.length; i++) {
       const row = data[i];
 
@@ -145,7 +144,7 @@ export default function CSVImporter({
         gain: row.gain,
         processing_time: row.processing_time,
         position: {
-          x: 100 + (i % 5) * 300, // mai mult spațiu între coloane
+          x: 100 + (i % 5) * 300, 
           y: 100 + Math.floor(i / 5) * 250,
         },
       };
@@ -154,7 +153,6 @@ export default function CSVImporter({
       jobNameToId.set(jobName.toLowerCase(), jobId);
     }
 
-    // Second pass: process conflicts
     for (let i = 0; i < data.length; i++) {
       const row = data[i];
 

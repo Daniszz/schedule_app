@@ -27,7 +27,6 @@ export const useScheduleResultStore = create((set, get) => ({
     }
   },
 
-  // Fetch all results
   fetchResults: async () => {
     set({ isResultsLoading: true });
     try {

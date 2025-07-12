@@ -8,7 +8,7 @@ const scheduleSchemaResultSchema = new mongoose.Schema({
     required: true,
   },
   fully_colored_jobs: [{ type: String }],
-  color_map: { type: mongoose.Schema.Types.Mixed, default: {} }, // Poate stoca un obiect flexibil
+  color_map: { type: mongoose.Schema.Types.Mixed, default: {} }, 
   f1: { type: Number },
   f2: { type: Number },
   f3: { type: Number },
